@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://172.16.10.196:3306/sgsl_base?useSSL=false
+    username: root
+    password: root
+    hikari:
+      connection-init-sql: set names utf8mb4;
+microx:
+  swagger:
+    title: 接口文档
+    description: code-generator RESTful APIs
+    version: ${info.build.version}
+mybatis:
+  mapper-locations: classpath:mappers/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    call-setters-on-nulls: true
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
