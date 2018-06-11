@@ -3,7 +3,7 @@
 <mapper namespace="${package_name}.mapper.${table_name}Mapper">
 
     <!-- 数据库字段对象关系映射 -->
-    <resultMap id="BaseResultMap" 
+    <resultMap id="BaseResultMap"
         type="${package_name}.domain.${table_name}" >
      <#list model_column as model>
      <#if model.columnName='id'>
@@ -24,7 +24,7 @@
             </#if>
         </trim>
     </sql>
-  
+
     <!--新增${table_annotation}-->
     <insert id="create" parameterType="${package_name}.domain.${table_name}" useGeneratedKeys="true" keyProperty="id">
         insert into ${table_name_small}
@@ -47,7 +47,7 @@
             </#if>
         </trim>
     </insert>
-    
+
     <!--根据id修改${table_annotation}-->
     <update id="updateById" parameterType="${package_name}.domain.${table_name}">
         update ${table_name_small}
@@ -62,7 +62,7 @@
         </set>
         where id=#${r'{'}id${r'}'}
     </update>
-    
+
     <!--根据ids删除${table_annotation}-->
     <delete id="deleteByIds" parameterType="java.util.List">
         delete from ${table_name_small} where id in
@@ -93,17 +93,22 @@
         </#if>
     </sql>
 
-    <!--查询${table_annotation}-->
-    <select id="page${table_name}s" resultMap="BaseResultMap"
+
+    <!--查询${table_annotation}列表-->
+     <#if pageFlag>
+     <select id="page${table_name}s" resultMap="BaseResultMap"
+     <#else>
+     <select id="list" resultMap="BaseResultMap"
+     </#if>
         parameterType="${package_name}.domain.${table_name}">
-	        select <include refid="Base_Column_List" /> 
+	        select <include refid="Base_Column_List" />
 	        from ${table_name_small}
 	        <include refid="Base_Where_Condition" />
 	        <#if pageFlag>
 	        <include refid="common.pager" />
-	        </#if> 
+	        </#if>
     </select>
-    
+
     <!--查询${table_annotation}总记录-->
     <select id="page${table_name}Counts" resultType="long"
         parameterType="${package_name}.domain.${table_name}">

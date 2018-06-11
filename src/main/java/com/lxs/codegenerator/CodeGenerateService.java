@@ -38,15 +38,15 @@ public class CodeGenerateService {
     private final String USER = "root";
     private final String PASSWORD = "root";
     private final String DRIVER = "com.mysql.jdbc.Driver";
-    private final String diskPath = "D:\\lmj\\git-project\\my\\basic-service\\code-generator\\";
+    private final String diskPath = "D:\\lmj\\git-project-my\\code-generator\\";
 //    private final String diskPath = "D:\\lmjCode\\0607\\";
     //生成文件是否放同一文件夹标识
 //    private boolean oneFloadFlag = true;
     //生成分页标识
-    private boolean pageFlag = true;
+    private boolean pageFlag = false;
     private final String tableTirmPrefix = "";// 生成文件中去掉表前缀
     // 需要生成的table ,逗号分割
-    private final List<String> tableList = Lists.newArrayList("product_group");
+    private final List<String> tableList = Lists.newArrayList("store");
 
     public Connection getConnection() throws Exception {
         Class.forName(DRIVER);
@@ -85,7 +85,7 @@ public class CodeGenerateService {
                 String changeTableName = replaceUnderLineAndUpperCase(tableName.replaceFirst(tableTirmPrefix, ""));// 首字母大写用于定义类
                 String changeTableNameFistLowCase =
                         replaceUnderLineAndUpperCaseFistLowCase(tableName.replaceFirst(tableTirmPrefix, ""));// 首字母小写用于申明变量
-                
+
                 // 生成Mapper文件
                 generateFile("Mapper.xml", "Mapper.ftl", tableName, changeTableName, changeTableNameFistLowCase,
                         tableRs.getString("REMARKS"),
@@ -125,7 +125,7 @@ public class CodeGenerateService {
 
     private void generateFile(String suffix, String templateName, String tableName, String changeTableName,
             String changeTableNameFistLowCase, String tableAnnotation, ResultSet resultSet) throws Exception {
-        
+
         String tempDiskPath = diskPath;
 //        if (!oneFloadFlag) {
         String javaPath = "src/main/java/";
@@ -162,14 +162,14 @@ public class CodeGenerateService {
         if (!targetFoder.exists()) {
             targetFoder.mkdirs();
         }
-        
+
 //        final String path =
 //                oneFloadFlag ? diskPath + changeTableName + suffix : tempDiskPath + changeTableName + suffix;
         final String path = tempDiskPath + (suffix.equals("List.ftl")?changeTableNameFistLowCase: changeTableName) + suffix;
         File mapperFile = new File(path);
         List<ColumnClass> columnClassList = new ArrayList<>();
         ColumnClass columnClass = null;
-        
+
         //主键和主键类型
         String key = null;
         String keyType = null;
@@ -215,7 +215,7 @@ public class CodeGenerateService {
         dataMap.put("date", CURRENT_DATE);
         dataMap.put("dateTime", CURRENT_DATE_TIME);
         dataMap.put("package_name", packageName);
-        
+
         if (!StringUtils.isEmpty(tableAnnotation)) {
             // 判断最后字符串是否以表结尾 去掉
             String lastStr = tableAnnotation.substring(tableAnnotation.length() - 1, tableAnnotation.length());
@@ -226,7 +226,7 @@ public class CodeGenerateService {
                 tableAnnotation += "实体类";
             }
         }
-        
+
         dataMap.put("table_annotation", tableAnnotation);
         dataMap.put("pageFlag", pageFlag);
         Writer out = new BufferedWriter(new OutputStreamWriter(fos, "utf-8"), 10240);
@@ -269,7 +269,7 @@ public class CodeGenerateService {
 
     /**
      * 数据字段类型转model属性类型
-     * 
+     *
      * @param colType
      * @return
      */
