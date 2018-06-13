@@ -19,8 +19,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 // @EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class})
 public class BasicDataCenterApplication {
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         SpringApplication.run(BasicDataCenterApplication.class, args);
         /**
          * 出现这个吉祥马就是程序启动成功的标识， 勿删 ！！
