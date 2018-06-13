@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lhiot.basic.mapper.WxSmallProductStandardMapper">
+
+
+    <!--新增小程序商品规格 -->
+    <insert id="create" parameterType="com.lhiot.basic.domain.WxSmallProductStandard"
+        useGeneratedKeys="true" keyProperty="id">
+        insert into wx_small_product_standard
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null ">
+                id,
+            </if>
+            <if test="productId != null ">
+                product_id,
+            </if>
+            <if test="barcode != null ">
+                barcode,
+            </if>
+            <if test="specification != null ">
+                specification,
+            </if>
+            <if test="standardQty != null ">
+                standard_qty,
+            </if>
+            <if test="unitId != null ">
+                unit_id,
+            </if>
+            <if test="price != null ">
+                price,
+            </if>
+            <if test="salePrice != null ">
+                sale_price,
+            </if>
+            <if test="rank != null ">
+                rank,
+            </if>
+            <if test="description != null ">
+                description,
+            </if>
+            <if test="shelvesStatus != null ">
+                shelves_status,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null ">
+                #{id},
+            </if>
+            <if test="productId != null ">
+                #{productId},
+            </if>
+            <if test="barcode != null ">
+                #{barcode},
+            </if>
+            <if test="specification != null ">
+                #{specification},
+            </if>
+            <if test="standardQty != null ">
+                #{standardQty},
+            </if>
+            <if test="unitId != null ">
+                #{unitId},
+            </if>
+            <if test="price != null ">
+                #{price},
+            </if>
+            <if test="salePrice != null ">
+                #{salePrice},
+            </if>
+            <if test="rank != null ">
+                #{rank},
+            </if>
+            <if test="description != null ">
+                #{description},
+            </if>
+            <if test="shelvesStatus != null ">
+                #{shelvesStatus},
+            </if>
+        </trim>
+    </insert>
+
+    <!--根据id修改小程序商品规格 -->
+    <update id="updateById" parameterType="com.lhiot.basic.domain.WxSmallProductStandard">
+        update wx_small_product_standard
+        <set>
+            <if test="productId != null ">
+                product_id = #{productId},
+            </if>
+            <if test="barcode != null ">
+                barcode = #{barcode},
+            </if>
+            <if test="specification != null ">
+                specification = #{specification},
+            </if>
+            <if test="standardQty != null ">
+                standard_qty = #{standardQty},
+            </if>
+            <if test="unitId != null ">
+                unit_id = #{unitId},
+            </if>
+            <if test="price != null ">
+                price = #{price},
+            </if>
+            <if test="salePrice != null ">
+                sale_price = #{salePrice},
+            </if>
+            <if test="rank != null ">
+                rank = #{rank},
+            </if>
+            <if test="description != null ">
+                description = #{description},
+            </if>
+            <if test="shelvesStatus != null ">
+                shelves_status = #{shelvesStatus},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <!--根据id删除小程序商品规格 -->
+    <delete id="deleteByIds" parameterType="java.util.List">
+        delete from wx_small_product_standard where id in
+        <foreach collection="list" item="item" open="("
+            separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+
+    <!-- 分页查询where条件 -->
+    <sql id="pageWxSmallProductStandardsWhere">
+        <trim prefix="where" prefixOverrides="and">
+            <if test="id != null">
+                and t1.id = #{id}
+            </if>
+            <if test="barcode != null and barcode != ''">
+                and t1.barcode like concat('%',#{barcode},'%')
+            </if>
+            <if test="productName != null and productName != ''">
+                and t2.product_name like concat('%',#{productName},'%')
+            </if>
+            <if test="productId != null and productId != ''">
+                and t1.product_id  = #{productId}
+            </if>
+            <if test="shelvesStatus != null ">
+                and t1.shelves_status  = #{shelvesStatus}
+            </if>
+            <if test="minPrice != null and minPrice != ''">
+                and t1.price  &gt;= #{minPrice}
+            </if>
+            <if test="maxPrice != null and maxPrice != ''">
+                and t1.price  &lt;= #{maxPrice}
+            </if>
+            <if test="productCode != null and productCode != ''">
+                and t2.product_code like concat('%',#{productCode},'%')
+            </if>
+
+            <!-- 根据规格ids匹配 -->
+            <if test="flag">
+                <if test="ids != null">
+                    and t1.id in
+                    <foreach collection="ids" item="item" open="("
+                        separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="barcode != null and barcode != ''">
+                    and t1.barcode = #{barcode}
+                </if>
+            </if>
+
+        </trim>
+    </sql>
+    <!--查询小程序商品规格 -->
+    <select id="pageWxSmallProductStandards" resultType="com.lhiot.basic.domain.out.WxSmallProductStandardResult"
+        parameterType="com.lhiot.basic.domain.WxSmallProductStandard">
+        SELECT
+            t1.id,
+            t1.product_id AS productId,
+            t1.barcode,
+            t1.specification,
+            t1.standard_qty As standardQty,
+            t1.unit_id AS unitId,
+            t1.shelves_status AS shelvesStatus,
+            t1.price,
+            t1.sale_price as salePrice,
+            t1.rank,
+            t1.description,
+            t2.product_name AS productName,
+            t2.image,
+            t2.small_image smallImage,
+            t2.large_image largeImage,
+            t2.limit_qty limitQty,
+            t2.video_url videoUrl,
+            t2.video_image videoImage,
+            t2.base_qty baseQty,
+            t2.description productDescription,
+            t3.unit_name AS productUnit,
+            t2.product_code as productCode,
+            t4.group_name as groupName,
+            t5.unit_name as baseUnit
+        FROM wx_small_product_standard t1
+        LEFT JOIN product t2 ON t1.product_id = t2.id
+        LEFT JOIN product_unit t3 ON t1.unit_id = t3.id
+        LEFT JOIN product_group t4 ON t2.group_id = t4.id
+        LEFT JOIN product_unit t5 ON t2.unit_id = t5.id
+        <include refid="pageWxSmallProductStandardsWhere" />
+        <include refid="common.pager" />
+    </select>
+
+    <!--查询小程序商品规格总记录 -->
+    <select id="pageWxSmallProductStandardCounts" resultType="long"
+        parameterType="com.lhiot.basic.domain.WxSmallProductStandard">
+        SELECT COUNT(t1.id) FROM wx_small_product_standard t1
+        LEFT JOIN product t2 ON t1.product_id = t2.id
+        LEFT JOIN product_unit t3 ON t1.unit_id = t3.id
+        <include refid="pageWxSmallProductStandardsWhere" />
+    </select>
+
+</mapper>

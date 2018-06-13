@@ -1,0 +1,6 @@
+#配置本项目版本相关信息
+info:
+  build:
+    version: @project.version@
+    artifact: @project.artifactId@
+    group: @project.groupId@

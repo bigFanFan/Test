@@ -1,0 +1,34 @@
+#定义本jar端口
+server:
+  port: 5555
+#定义注册中心上本服务的名称，版本号用于多版本兼容时，网关版本路由
+spring:
+  application:
+    name: basic-data-center-v1-0-0
+#定义启动环境
+  profiles:
+    active: ${RUN_LEVEL:dev}
+#定义统一配置中心相关配置
+  cloud:
+    config:
+      #指定加载哪些配置文件
+      name: basic-data-center, rabbit-mq, redis, application
+      profile: ${spring.profiles.active}
+      #指定配置仓库分支
+      label: 1.0.0-SNAPSHOT
+      failFast: true
+      discovery:
+        enabled: true
+        #指定service-id，服务发现配置中心
+        service-id: config-server
+#定义统一注册中心相关配置
+eureka:
+  instance:
+    #设置本项目自动配置IP地址到注册中心
+    prefer-ip-address: true
+    #设置从注册中心点击service-id时，打开的页面
+    status-page-url-path: /swagger-ui.html
+  client:
+    service-url:
+      #指定注册中心分片地址
+      defaultZone: ${EUREKA_REPLICAS_LIST:http://172.16.10.196:1111/eureka}
