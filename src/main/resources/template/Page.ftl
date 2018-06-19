@@ -328,6 +328,7 @@ function beforeSelectRow(){
 
 //datepicker plugin
 $('.form_datatime').datetimepicker({
+    format:"yyyy-mm-dd hh:ii:ss",
     weekStart: 1,
     todayBtn:  "linked",
     clearBtn:1,
@@ -335,7 +336,9 @@ $('.form_datatime').datetimepicker({
     todayHighlight: 1,
     startView: 2,
     forceParse: 0,
-    showMeridian: 1,
+    minView:'hour',
+    showMeridian: false,
+    language:'zh-CN'
 });
 
 function exportExcelData(){

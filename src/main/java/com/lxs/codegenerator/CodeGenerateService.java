@@ -34,19 +34,19 @@ public class CodeGenerateService {
     private final String CURRENT_DATE = new SimpleDateFormat("yyyy/MM/dd").format(new Date());
     private final String CURRENT_DATE_TIME = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
     private final String packageName = "com.lxs.app";
-    private final String URL = "jdbc:mysql://172.16.10.196:3306/sgsl_base?useSSL=false";
+    private final String URL = "jdbc:mysql://172.16.10.196:3306/sgsl_order?useSSL=false";
     private final String USER = "root";
     private final String PASSWORD = "root";
     private final String DRIVER = "com.mysql.jdbc.Driver";
-    private final String diskPath = "D:\\lmj\\git-project-my\\code-generator\\";
-//    private final String diskPath = "D:\\lmjCode\\0607\\";
+//    private final String diskPath = "D:\\lmj\\git-project-my\\code-generator\\";
+    private final String diskPath = "D:\\lmjCode\\";
     //生成文件是否放同一文件夹标识
 //    private boolean oneFloadFlag = true;
     //生成分页标识
     private boolean pageFlag = false;
     private final String tableTirmPrefix = "";// 生成文件中去掉表前缀
     // 需要生成的table ,逗号分割
-    private final List<String> tableList = Lists.newArrayList("store");
+    private final List<String> tableList = Lists.newArrayList("order");
 
     public Connection getConnection() throws Exception {
         Class.forName(DRIVER);
