@@ -291,4 +291,17 @@
             <include refid="Base_Where_Condition" />
     </select>
 
+    <!--根据ids获取门店信息(id和名称)-->
+    <select id="findStoreList" resultMap="BaseResultMap"
+        parameterType="List">
+            select
+                store_id,
+                store_name
+            from store where store_id in
+            <foreach collection="list" item="item" open="("
+                     separator="," close=")">
+                #{item}
+            </foreach>
+    </select>
+
 </mapper>
