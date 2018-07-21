@@ -19,10 +19,11 @@ import org.springframework.web.bind.annotation.*;
 * @author Limiaojun
 * @date 2018/06/01
 */
-@Api(description = "小程序商品规格接口")
+@Deprecated
+@Api(description = "小程序商品规格接口-备用")
 @Slf4j
 @RestController
-@RequestMapping("/wxsmall/products/standards")
+@RequestMapping("/wxsmall/products/standards/bak")
 public class WxSmallProductStandardApi {
 
     private final WxSmallProductStandardService wxSmallProductStandardService;
