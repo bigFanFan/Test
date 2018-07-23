@@ -83,7 +83,7 @@
                     <div class="form-group">
                         <#if model_column?exists>
                             <#list model_column as model>
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <label for="${model.changeColumnName?uncap_first}" class="col-md-5">${model.columnComment!}</label>
                             <div class="col-md-7 nopd-l"><input type="text" class="form-control" name="${model.changeColumnName?uncap_first}" id="${model.changeColumnName?uncap_first}" placeholder=""/></div>
                         </div>
@@ -152,7 +152,7 @@ $(function(){
             }, 0);
             $("[data-toggle='tooltip']").tooltip({html : true});
         },
-        editurl: "/aaa/bbb",//不需要
+        editurl: "",//不需要
         caption: "${table_annotation}管理",
         autowidth: true
     });
@@ -226,29 +226,15 @@ $(function(){
         }
     });
 
-    //模态框内部搜索
-    $('#btn-modal-search').on('click',function(){
-        var gridName=$(this).data("grid");
-        var data=$('#select-dialog').find('#search_form').serializeArray();
-        var jsonData={};
-        for(var i=0;i<data.length;i++){
-            jsonData[data[i].name]=data[i].value;
-        }
-        //console.log(jsonData);
-        //提交后刷新grid
-        $(gridName).setGridParam({postData:jsonData}).trigger('reloadGrid');
-    });
 
     //添加或修改提交
     $('#btn-confirm').on('click',function(){
-        //Ajax提交表单数据
-        var formData= $('#info_form').serializeArray();
-        var jsonData={};
-
-        for(var i=0;i<formData.length;i++){
-            jsonData[formData[i].name]=formData[i].value;
+        if(!$('#info_form').valid()){
+            return;
         }
-        var data=JSON.stringify(jsonData);
+
+        //Ajax提交表单数据
+        var data=JSON.stringify(getFromJsonData('#info_form'););
 
         if($('#info_form').valid()){
             $.ajax({
@@ -275,47 +261,26 @@ $(function(){
         }
     });
 
-
-    //增加正则验证
-    jQuery.validator.addMethod("digit", function(value, element,param) {
-        var tel = /^[0-9]*$/;
-        return this.optional(element) || (tel.test(value));
-    }, "请输入数字");
-
-    jQuery.validator.addMethod("rationalNum", function(value, element,param) {
-        var psw = /^[+]?[0-9]*\.?[0-9]+$/;
-        return this.optional(element) || (psw.test(value));
-    }, "请输入正确的数字");
-
-    jQuery.validator.addMethod("limitChar", function(value, element,param) {
-        var psw = /^.{0,5}$/;
-        return this.optional(element) || (psw.test(value));
-    }, "少于5个字");
+    //表单校验
     $("#info_form").validate({
         //失去焦点 进行验证
         onfocusout: function(element) {
             $(element).valid();
         },
         rules: {
-            barcode:"required",
-            specification:"required",
-            count: {
+             <#if model_column?exists>
+                 <#list model_column as model>
+             ${model.changeColumnName?uncap_first}:"required",
+                 </#list>
+             </#if>
+             count: {
                 required: true,
-                rationalNum:""
-            },
-            unit_code:"required",
-            price: {
-                required: true,
-                rationalNum:""
-            },
-            description: {
-                required: false,
-                limitChar:""
-            }
+                rationalNum:true
+             }
         },
         messages: {
-            specification:"请输入规格",
-            unit_code:"请输入单位"
+            //自定义提示
+
         }
     });
 });
@@ -343,28 +308,23 @@ $('.form_datatime').datetimepicker({
 
 function exportExcelData(){
     //Ajax提交表单数据
-    var formData= $('#search_form').serializeArray();
     var paramData={};
-    var jsonData={};
-    for(var i=0;i<formData.length;i++){
-        jsonData[formData[i].name]=formData[i].value;
-    }
+
     // 导出查询条件对象
-    paramData.searchParam = jsonData;
+    paramData.searchParam = getFromJsonData('#search_form');
     // 请求导出列表url
     paramData.requestUrl = Common.local.serverRequest.concat("/app/${table_name_first_low}s/grid");
     // 导出显示表头名称字符串,逗号分割
-    paramData.colName = "团购活动编号, 活动名称, 活动内容, 活动状态, 排序序号, 有效期起, 有效期止, 活动banner, 团购份额, 活动价, 团长优惠, 成团人数, 商品规格id, 成团有效时长, 提货截止时间, 规格描述, 是否允许模拟成团";
+    paramData.colName ="<#if model_column?exists><#list model_column as model>${model.columnComment!},</#list></#if>";
+
     // 导出显示表头对应字段字符串,逗号分割
-    paramData.keyStr = "id,activityName,content,status,rank,startTime,endTime,banner,totalNum,activityPrice,tourDiscount,fullUserNum,standardId,validSeconds,deliveryEndTime,standardDesc,robot";
+    paramData.keyStr ="<#if model_column?exists><#list model_column as model>${model.changeColumnName?uncap_first},</#list></#if>";
+
     // 导出显示标题
-    paramData.title = "团购活动管理";
+    paramData.title = "${table_annotation}管理";
 
     // 需要翻译字段信息 格式{status:{on:"进行中",off:"未开启",expire:"已结束"}}
-    var translateDicts = {};
-    translateDicts.status = {on:"进行中",off:"未开启",expire:"已结束"};
-    translateDicts.robot =  {on:"开启",off:"关闭"};
-    paramData.translateDicts = translateDicts;
+    paramData.translateDicts = translateDicts();
 
     var data=JSON.stringify(paramData);
     var path = '/app/export?params='+data;
@@ -372,5 +332,34 @@ function exportExcelData(){
     $.confirm(content,"确定","取消",function (){
         window.open(path);
     });
+}
+
+/**
+ * 翻译字典    fieldName不传值或者为空或者value不传值或空返回所有字典数据对象
+ * fieldName 需要翻译的字段名称，value 需要翻译的字段值
+ */
+function translateDicts(fieldName,value) {
+
+    //定义页面字典数据  start
+    var translateDicts = {};
+    translateDicts.imageStatus = {
+        "ON": "开启",
+        "OFF": "关闭"
+    };
+    //定义页面字典数据  end
+
+    if (fieldName == undefined || fieldName == ''
+            || value == undefined || value == '') {
+        return translateDicts;
+    }
+
+
+    var translateDictName = '';//需要翻译字典名称
+    //判断字段名称存在字典对象  并且值也存在,则获取翻译名称
+    if(translateDicts.hasOwnProperty(fieldName)
+            && translateDicts[fieldName].hasOwnProperty(value)){
+        translateDictName = translateDicts[fieldName][value];
+    }
+    return (translateDictName == undefined || translateDictName == '') ? "N/A" : translateDictName;
 }
 </script>

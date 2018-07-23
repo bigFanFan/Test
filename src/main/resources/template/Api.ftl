@@ -23,7 +23,8 @@ import java.util.List;
 @Api(description = "${table_annotation}接口")
 @Slf4j
 @RestController
-@RequestMapping("/${table_name_small?replace("_","/")}")
+@RequestMapping("/${table_name_first_low}")
+<#--@RequestMapping("/${table_name_small?replace("_","/")}")-->
 public class ${table_name}Api {
 
     private final ${table_name}Service ${table_name_first_low}Service;
@@ -33,7 +34,7 @@ public class ${table_name}Api {
         this.${table_name_first_low}Service = ${table_name_first_low}Service;
     }
 
-    @PostMapping
+    @PostMapping("/create")
     @ApiOperation(value = "添加${table_annotation}")
     @ApiImplicitParam(paramType = "body", name = "${table_name_first_low}", value = "要添加的${table_annotation}", required = true, dataType = "${table_name}")
     public ResponseEntity<Integer> create(@RequestBody ${table_name} ${table_name_first_low}) {
@@ -42,11 +43,12 @@ public class ${table_name}Api {
         return ResponseEntity.ok(${table_name_first_low}Service.create(${table_name_first_low}));
     }
 
-    @PutMapping
+    @PutMapping("/update/{id}")
     @ApiOperation(value = "根据id更新${table_annotation}")
     @ApiImplicitParam(paramType = "body", name = "${table_name_first_low}", value = "要更新的${table_annotation}", required = true, dataType = "${table_name}")
-    public ResponseEntity<Integer> update(@RequestBody ${table_name} ${table_name_first_low}) {
-        log.debug("根据id更新${table_annotation}\t param:{}",${table_name_first_low});
+    public ResponseEntity<Integer> update(@PathVariable("id") Long id,@RequestBody ${table_name} ${table_name_first_low}) {
+        log.debug("根据id更新${table_annotation}\t id:{} param:{}",id,${table_name_first_low});
+        ${table_name_first_low}.setId(id);
         
         return ResponseEntity.ok(${table_name_first_low}Service.updateById(${table_name_first_low}));
     }
@@ -69,7 +71,7 @@ public class ${table_name}Api {
     }
     
     <#if pageFlag>
-    @PostMapping("/page/query")
+    @GetMapping("/page/query")
     @ApiOperation(value = "查询${table_annotation}分页列表")
     public ResponseEntity<PagerResultObject<${table_name}>> pageQuery(${table_name} ${table_name_first_low}){
         log.debug("查询${table_annotation}分页列表\t param:{}",${table_name_first_low});
@@ -77,7 +79,7 @@ public class ${table_name}Api {
         return ResponseEntity.ok(${table_name_first_low}Service.pageList(${table_name_first_low}));
     }
     <#else>
-    @PostMapping("/list/query")
+    @GetMapping("/list/query")
     @ApiOperation(value = "查询${table_annotation}列表")
     @ApiImplicitParam(paramType = "body", name = "${table_name_first_low}", value = "查询参数", required = true, dataType = "${table_name}")
     public ResponseEntity<List<${table_name}>> listQuery(@RequestBody ${table_name} ${table_name_first_low}){

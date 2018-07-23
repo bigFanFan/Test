@@ -1,4 +1,4 @@
-package ${package_name}.controller.${table_name_first_low};
+package com.lxs.code.controller.product;
 
 import com.sgsl.app.config.ApplicationConfiguration;
 import com.sgsl.app.domain.PagerResultObject;
@@ -20,64 +20,64 @@ import org.springframework.web.client.Exception;
 
 @Slf4j
 @Controller
-@RequestMapping("/app/${table_name_first_low}")
-@ApiModel("${table_annotation}")
-public class ${table_name}Controller implements BaseObject {
+@RequestMapping("/app/product")
+@ApiModel("商品信息")
+public class ProductController implements BaseObject {
 
-    private String requestUrl = "%s/${table_name_small?replace("_","/")}";
+    private String requestUrl = "%s/product";
 
-    @Value("${r'${'}sgsl.version.number.${table_name_first_low}center${r'}'}")
+    @Value("${sgsl.version.number.productcenter}")
     private String version;
 
     private ApplicationConfiguration config;
 
     @Autowired
-    public ${table_name}Controller(ApplicationConfiguration config) {
+    public ProductController(ApplicationConfiguration config) {
         requestUrl = String.format(requestUrl, config.getApiGatewayServerBasecenterUrl());
         this.config = config;
     }
 
-    @ApiOperation(value = "${table_annotation}列表显示")
+    @ApiOperation(value = "商品信息列表显示")
     @GetMapping("/page")
     public String page(Map<String, Object> model) {
 
-        return "/${table_name_first_low}Manage/${table_name_first_low}List";
+        return "/productManage/productList";
     }
 
-    @ApiOperation(value = "后台管理--${table_annotation}分页列表", notes = "后台管理--${table_annotation}分页列表")
+    @ApiOperation(value = "后台管理--商品信息分页列表", notes = "后台管理--商品信息分页列表")
     @PostMapping("/grid")
     @ResponseBody
-    public PagerResultObject<${table_name}> grid(${table_name} ${table_name_first_low}) {
+    public PagerResultObject<Product> grid(Product product) {
 
         return  RestTemplateHelper.builder().url(requestUrl.concat("/page/query")).version(version).build()
-                        .exchange(HttpMethod.GET, new ParameterizedTypeReference<PagerResultObject<${table_name}>>() {
-                        }, ${table_name_first_low});
+                        .exchange(HttpMethod.GET, new ParameterizedTypeReference<PagerResultObject<Product>>() {
+                        }, product);
 
     }
 
-    @ApiOperation(value = "后台管理--${table_annotation}详情", notes = "后台管理--${table_annotation}详情")
+    @ApiOperation(value = "后台管理--商品信息详情", notes = "后台管理--商品信息详情")
     @GetMapping("/detail")
     @ResponseBody
-    public ${table_name} detail(@RequestParam String id) {
+    public Product detail(@RequestParam String id) {
 
         return RestTemplateHelper.builder().url(requestUrl.concat("/{id}")).version(version).build()
-                .exchange(HttpMethod.GET, ${table_name}.class, id);
+                .exchange(HttpMethod.GET, Product.class, id);
     }
 
-    @ApiOperation(value = "后台管理--新增或者修改${table_annotation}", notes = "后台管理--新增或者修改${table_annotation}")
+    @ApiOperation(value = "后台管理--新增或者修改商品信息", notes = "后台管理--新增或者修改商品信息")
     @PostMapping("/modify")
     @ResponseBody
-    public Map<String, Object> modify(@RequestBody ${table_name} ${table_name_first_low}) {
+    public Map<String, Object> modify(@RequestBody Product product) {
         Map<String, Object> result = new HashMap<>();
 
-        Long id = ${table_name_first_low}.getId();
+        Long id = product.getId();
         try {
             if (null != id) {
                 RestTemplateHelper.builder().url(requestUrl.concat("/update/").concat(id.toString())).version(version).build().exchangeBody(HttpMethod.PUT,
-                        Object.class, ${table_name_first_low});
+                        Object.class, product);
             } else {
                 RestTemplateHelper.builder().url(requestUrl.concat("/create")).version(version).build().exchangeBody(HttpMethod.POST,
-                        Object.class, ${table_name_first_low});
+                        Object.class, product);
 
             }
             result.put(SUCCESS, true);
@@ -90,7 +90,7 @@ public class ${table_name}Controller implements BaseObject {
         return result;
     }
 
-    @ApiOperation(value = "后台管理--批量删除${table_annotation}", notes = "后台管理--批量删除${table_annotation}")
+    @ApiOperation(value = "后台管理--批量删除商品信息", notes = "后台管理--批量删除商品信息")
     @GetMapping("/delete")
     @ResponseBody
     public Map<String, Object> delete(@RequestParam(value = "ids") String ids) {

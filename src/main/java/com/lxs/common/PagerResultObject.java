@@ -1,10 +1,10 @@
-/**   
-* @Title: Pager.java 
-* @Package cn.analysys.data.mobitor.manager.model 
-* @Description: 
+/**
+* @Title: Pager.java
+* @Package cn.analysys.data.mobitor.manager.model
+* @Description:
 * @author LiMiaojun
-* @date 2017年7月17日 上午10:59:45 
-* @version V1.0   
+* @date 2017年7月17日 上午10:59:45
+* @version V1.0
 */
 package com.lxs.common;
 
@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-/** 
+/**
  * Description: 分页返回对象
  *
  * @author Limiaojun
@@ -34,23 +34,23 @@ public class PagerResultObject<T> {
 
     @ApiModelProperty(notes = "返回行数,每页显示条数")
     private Long records;
-    
+
     @ApiModelProperty(notes = "总分页数")
     private Long allPages;
-    
+
     @ApiModelProperty(notes = "数据")
     private List<T> rows = Collections.emptyList();
-    
-    /** 
+
+    /**
      * Description:构建分页对象
-     *  
+     *
      * @param pageObj      分页请求参数对象
      * @param total     总记录数
      * @param rows      返回list对象
      * @return
      * @author Limiaojun
      * @date 2018-05-31 09:27
-     */  
+     */
     public static <T> PagerResultObject<T> of(Object pageObj, Long total, List<T> rows) {
         PagerResultObject<T> pagerResultObject = new PagerResultObject<T>();
         // 返回记录条数
@@ -81,15 +81,13 @@ public class PagerResultObject<T> {
         return pagerResultObject;
     }
 
-    /**
-     * Description:app-admin 总分页参数为total  ,需要处理
-     *
-     * @return
-     * @author Limiaojun
-     * @date 2018-04-23 11:44
-     */
-    public Long getTotal() {
-
-        return allPages;
-    }
+//    /** 获取总分页数*/
+//    public Integer getAllPages() {
+//        if (total == null || records == null
+//                || total == 0 || records == 0) {
+//            return 0;
+//        }
+//
+//        return total % records == 0 ? total / records : total / records + 1;
+//    }
 }

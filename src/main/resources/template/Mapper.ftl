@@ -85,7 +85,7 @@
         <#if model_column?exists>
         <where>
             <#list model_column as model>
-            <if test="${model.changeColumnName} != null ">
+            <if test="${model.changeColumnName} != null <#--<#if  model.modelAttrType='String' > and ${model.changeColumnName} != '' </#if> -->">
                 and ${model.columnName} = #${r'{'}${model.changeColumnName}${r'}'}
             </if>
             </#list>

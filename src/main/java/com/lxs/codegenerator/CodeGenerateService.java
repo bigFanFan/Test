@@ -1,29 +1,21 @@
 package com.lxs.codegenerator;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
+import com.lxs.code.api.ProductApi;
+import freemarker.template.Template;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+import org.yaml.snakeyaml.Yaml;
+
+import java.io.*;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
-
-import com.google.common.collect.Lists;
-
-import freemarker.template.Template;
+import java.util.*;
 
 /**
  * 描述：代码生成器 Created by Ay on 2017/5/1.
@@ -33,31 +25,64 @@ public class CodeGenerateService {
     private final String AUTHOR = "Limiaojun";
     private final String CURRENT_DATE = new SimpleDateFormat("yyyy/MM/dd").format(new Date());
     private final String CURRENT_DATE_TIME = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
-    private final String packageName = "com.lxs.app";
-    private final String URL = "jdbc:mysql://172.16.10.196:3306/sgsl_order?useSSL=false";
+
+    private final String packageName = "com.lxs.code";
+//    private final String packageName = "com.lhiot.wechat.activity";
+
+    private final String URL = "jdbc:mysql://172.16.10.196:3305/sgsl_base?useSSL=false";
     private final String USER = "root";
     private final String PASSWORD = "root";
     private final String DRIVER = "com.mysql.jdbc.Driver";
-//    private final String diskPath = "D:\\lmj\\git-project-my\\code-generator\\";
-    private final String diskPath = "D:\\lmjCode\\";
-    //生成文件是否放同一文件夹标识
-//    private boolean oneFloadFlag = true;
-    //生成分页标识
-    private boolean pageFlag = false;
-    private final String tableTirmPrefix = "";// 生成文件中去掉表前缀
+
+
+    //生成项目路径
+    private String diskPath = "D:\\lmj\\git-project-my\\code-generator\\";
+    // 生成文件是否放同一文件夹标识
+    private boolean oneFloadFlag = false;
+
+    // 生成分页标识
+    private boolean pageFlag = true;
+    private final String tableTirmPrefix = "t_";// 生成文件中去掉表前缀
     // 需要生成的table ,逗号分割
-    private final List<String> tableList = Lists.newArrayList("order");
+    private final List<String> tableList = Lists.newArrayList("product");
 
     public Connection getConnection() throws Exception {
-        Class.forName(DRIVER);
-        Properties props = new Properties();
-        props.setProperty("user", USER);
-        props.setProperty("password", PASSWORD);
-        props.setProperty("remarks", "true"); // 设置可以获取remarks信息
-        props.setProperty("useInformationSchema", "true");// 设置可以获取tables
-                                                          // remarks信息
-        Connection connection = DriverManager.getConnection(URL, props);
+        Connection connection = null;
+
+        Yaml yaml = new Yaml();
+        JSONObject jsonObject = (JSONObject) JSONObject.toJSON(yaml.load(ProductApi.class.getResourceAsStream("/application.yml")));
+        jsonObject =jsonObject.getJSONObject("spring").getJSONObject("datasource");
+        if(null != jsonObject){
+            Class.forName(jsonObject.getString("driver-class-name"));
+            Properties props = new Properties();
+            props.setProperty("user", jsonObject.getString("username"));
+            props.setProperty("password", jsonObject.getString("password"));
+            props.setProperty("remarks", "true"); // 设置可以获取remarks信息
+            props.setProperty("useInformationSchema", "true");// 设置可以获取tables
+            // remarks信息
+            connection = DriverManager.getConnection(jsonObject.getString("url"), props);
+        }else{
+            Class.forName(DRIVER);
+            Properties props = new Properties();
+            props.setProperty("user", USER);
+            props.setProperty("password", PASSWORD);
+            props.setProperty("remarks", "true"); // 设置可以获取remarks信息
+            props.setProperty("useInformationSchema", "true");// 设置可以获取tables
+            // remarks信息
+            connection = DriverManager.getConnection(URL, props);
+        }
+
         return connection;
+
+//        Class.forName(DRIVER);
+//        Properties props = new Properties();
+//        props.setProperty("user", USER);
+//        props.setProperty("password", PASSWORD);
+//        props.setProperty("remarks", "true"); // 设置可以获取remarks信息
+//        props.setProperty("useInformationSchema", "true");// 设置可以获取tables
+//        // remarks信息
+//        Connection connection = DriverManager.getConnection(URL, props);
+//        return connection;
     }
 
     public static void main(String[] args) throws Exception {
@@ -66,15 +91,17 @@ public class CodeGenerateService {
     }
 
     public void generate() throws Exception {
+        diskPath = oneFloadFlag ? new File("").getCanonicalPath().concat("\\") : diskPath;
         try {
-            File targetFoder = new File(diskPath);
+            //如果是同一文件夹标识,取当前项目路径
+            File targetFoder = new File(oneFloadFlag ? new File("").getCanonicalPath().concat("\\") : diskPath);
             if (!targetFoder.exists()) {
                 targetFoder.mkdirs();
             }
             Connection connection = getConnection();
             DatabaseMetaData databaseMetaData = connection.getMetaData();
             // 查询表
-            ResultSet tableRs = databaseMetaData.getTables(null, "%", null, new String[] { "TABLE" });
+            ResultSet tableRs = databaseMetaData.getTables(null, "%", null, new String[]{"TABLE"});
             while (tableRs.next()) {
                 // 生成Mapper文件
                 String tableName = tableRs.getString("TABLE_NAME");
@@ -107,8 +134,8 @@ public class CodeGenerateService {
                         tableRs.getString("REMARKS"),
                         databaseMetaData.getColumns(null, "%", tableRs.getString("TABLE_NAME"), "%"));
                 // 生成controller文件
-                generateFile("Controller.java", "Controller.ftl", tableName, changeTableName, changeTableNameFistLowCase,
-                        tableRs.getString("REMARKS"),
+                generateFile("Controller.java", "Controller.ftl", tableName, changeTableName,
+                        changeTableNameFistLowCase, tableRs.getString("REMARKS"),
                         databaseMetaData.getColumns(null, "%", tableRs.getString("TABLE_NAME"), "%"));
                 // 生成ftl页面
                 generateFile("List.ftl", "Page.ftl", tableName, changeTableName, changeTableNameFistLowCase,
@@ -124,16 +151,16 @@ public class CodeGenerateService {
     }
 
     private void generateFile(String suffix, String templateName, String tableName, String changeTableName,
-            String changeTableNameFistLowCase, String tableAnnotation, ResultSet resultSet) throws Exception {
+                              String changeTableNameFistLowCase, String tableAnnotation, ResultSet resultSet) throws Exception {
 
         String tempDiskPath = diskPath;
-//        if (!oneFloadFlag) {
+        // if (!oneFloadFlag) {
         String javaPath = "src/main/java/";
         String resourcesPath = "src/main/resources/";
         String packagePath = packageName.replaceAll("\\.", "/").concat("/");
         switch (suffix) {
             case "Mapper.xml":
-                tempDiskPath += resourcesPath.concat("mappers").concat("/");
+                tempDiskPath += oneFloadFlag ? javaPath.concat(packagePath).concat("mapper").concat("/") : resourcesPath.concat("mappers").concat("/");
                 break;
             case "Mapper.java":
                 tempDiskPath += javaPath.concat(packagePath).concat("mapper").concat("/");
@@ -148,39 +175,41 @@ public class CodeGenerateService {
                 tempDiskPath += javaPath.concat(packagePath).concat("api").concat("/");
                 break;
             case "Controller.java":
-                tempDiskPath += javaPath.concat(packagePath).concat("controller").concat("/");
+                tempDiskPath += oneFloadFlag ? javaPath.concat(packagePath).concat("controller").concat("/") : resourcesPath.concat("other").concat("/");
                 break;
             case "List.ftl":
-                tempDiskPath += resourcesPath.concat("template").concat("/");
-//             break;
+                tempDiskPath += oneFloadFlag ? javaPath.concat(packagePath).concat("template").concat("/") : resourcesPath.concat("other").concat("/");
+                break;
             default:
                 break;
         }
-//        }
+        // }
 
         File targetFoder = new File(tempDiskPath);
         if (!targetFoder.exists()) {
             targetFoder.mkdirs();
         }
 
-//        final String path =
-//                oneFloadFlag ? diskPath + changeTableName + suffix : tempDiskPath + changeTableName + suffix;
-        final String path = tempDiskPath + (suffix.equals("List.ftl")?changeTableNameFistLowCase: changeTableName) + suffix;
+        // final String path =
+        // oneFloadFlag ? diskPath + changeTableName + suffix : tempDiskPath +
+        // changeTableName + suffix;
+        final String path =
+                tempDiskPath + (suffix.equals("List.ftl") ? changeTableNameFistLowCase : changeTableName) + suffix;
         File mapperFile = new File(path);
         List<ColumnClass> columnClassList = new ArrayList<>();
-        ColumnClass columnClass = null;
+        com.lxs.codegenerator.ColumnClass columnClass = null;
 
-        //主键和主键类型
+        // 主键和主键类型
         String key = null;
         String keyType = null;
         while (resultSet.next()) {
             // id字段略过
             // if(resultSet.getString("COLUMN_NAME").equals("id")) continue;
-            if(null == key) {
+            if (null == key) {
                 key = resultSet.getString("COLUMN_NAME");
                 keyType = colTypeToModType(resultSet.getString("TYPE_NAME"));
             }
-            columnClass = new ColumnClass();
+            columnClass = new com.lxs.codegenerator.ColumnClass();
             // 获取字段名称
             columnClass.setColumnName(resultSet.getString("COLUMN_NAME"));
             // 获取字段类型
@@ -196,17 +225,17 @@ public class CodeGenerateService {
         }
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("model_column", columnClassList);
-        dataMap.put("primary_key",key);
-        dataMap.put("primary_key_modtype",keyType);
+        dataMap.put("primary_key", key);
+        dataMap.put("primary_key_modtype", keyType);
         generateFileByTemplate(tableName, changeTableName, changeTableNameFistLowCase, tableAnnotation, templateName,
                 mapperFile, dataMap);
 
     }
 
     private void generateFileByTemplate(String tableName, String changeTableName, String changeTableNameFistLowCase,
-            String tableAnnotation, final String templateName, File file, Map<String, Object> dataMap)
+                                        String tableAnnotation, final String templateName, File file, Map<String, Object> dataMap)
             throws Exception {
-        Template template = FreeMarkerTemplateUtils.getTemplate(templateName);
+        Template template = com.lxs.codegenerator.FreeMarkerTemplateUtils.getTemplate(templateName);
         FileOutputStream fos = new FileOutputStream(file);
         dataMap.put("table_name_small", tableName);
         dataMap.put("table_name", changeTableName);
