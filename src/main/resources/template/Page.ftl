@@ -324,7 +324,7 @@ function exportExcelData(){
     paramData.title = "${table_annotation}管理";
 
     // 需要翻译字段信息 格式{status:{on:"进行中",off:"未开启",expire:"已结束"}}
-    paramData.translateDicts = translateDicts();
+    paramData.translateDicts = getAllDicts();
 
     var data=JSON.stringify(paramData);
     var path = '/app/export?params='+data;
@@ -334,32 +334,37 @@ function exportExcelData(){
     });
 }
 
+var translateDicts = {};
 /**
- * 翻译字典    fieldName不传值或者为空或者value不传值或空返回所有字典数据对象
+ * 获取所有要翻译字典信息
+ */
+function getAllDicts() {
+    //只初始化一次
+    if(JSON.stringify(translateDicts)=="{}"){
+        console.log("加载字典:::"+JSON.stringify(translateDicts));
+
+        translateDicts.STATUS = {
+            "0": "成功",
+            "1": "失败"
+        };
+    }
+}
+/**
+ * 翻译字典
  * fieldName 需要翻译的字段名称，value 需要翻译的字段值
  */
-function translateDicts(fieldName,value) {
-
-    //定义页面字典数据  start
-    var translateDicts = {};
-    translateDicts.imageStatus = {
-        "ON": "开启",
-        "OFF": "关闭"
-    };
-    //定义页面字典数据  end
-
-    if (fieldName == undefined || fieldName == ''
-            || value == undefined || value == '') {
-        return translateDicts;
-    }
+function getDictByName(fieldName,value) {
+    getAllDicts();
 
 
     var translateDictName = '';//需要翻译字典名称
+
     //判断字段名称存在字典对象  并且值也存在,则获取翻译名称
     if(translateDicts.hasOwnProperty(fieldName)
             && translateDicts[fieldName].hasOwnProperty(value)){
         translateDictName = translateDicts[fieldName][value];
     }
-    return (translateDictName == undefined || translateDictName == '') ? "N/A" : translateDictName;
+
+    return translateDictName == '' ? "N/A" : translateDictName;
 }
 </script>
