@@ -108,4 +108,6 @@ public class ProductStandardResult {
     @ApiModelProperty(notes = "是否上架 1-上架  0-下架2", dataType = "String")
     private String shelvesStatus;
 
+    @ApiModelProperty(notes = "套餐中，该规格商品的份数", dataType = "Integer")
+    private Integer relationCount;
 }
