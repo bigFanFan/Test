@@ -26,17 +26,17 @@ public class CodeGenerateService {
     private final String CURRENT_DATE = new SimpleDateFormat("yyyy/MM/dd").format(new Date());
     private final String CURRENT_DATE_TIME = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
 
-    private final String packageName = "com.lxs.code";
+    private final String packageName = "com.foodsee.user";
 //    private final String packageName = "com.lhiot.wechat.activity";
 
-    private final String URL = "jdbc:mysql://172.16.10.196:3305/sgsl_base?useSSL=false";
+    private final String URL = "jdbc:mysql://172.16.10.196:3305/foodsee_user_201804?useSSL=false";
     private final String USER = "root";
     private final String PASSWORD = "root";
     private final String DRIVER = "com.mysql.jdbc.Driver";
 
 
     //生成项目路径
-    private String diskPath = "D:\\lmj\\git-project-my\\code-generator\\";
+    private String diskPath = "D:\\lmj\\git-project-fork\\foodsee-server\\user-center\\";
     // 生成文件是否放同一文件夹标识
     private boolean oneFloadFlag = false;
 
@@ -49,19 +49,20 @@ public class CodeGenerateService {
     public Connection getConnection() throws Exception {
         Connection connection = null;
 
-        Yaml yaml = new Yaml();
-        JSONObject jsonObject = (JSONObject) JSONObject.toJSON(yaml.load(ProductApi.class.getResourceAsStream("/application.yml")));
-        jsonObject =jsonObject.getJSONObject("spring").getJSONObject("datasource");
-        if(null != jsonObject){
-            Class.forName(jsonObject.getString("driver-class-name"));
-            Properties props = new Properties();
-            props.setProperty("user", jsonObject.getString("username"));
-            props.setProperty("password", jsonObject.getString("password"));
-            props.setProperty("remarks", "true"); // 设置可以获取remarks信息
-            props.setProperty("useInformationSchema", "true");// 设置可以获取tables
-            // remarks信息
-            connection = DriverManager.getConnection(jsonObject.getString("url"), props);
-        }else{
+//        从配置文件中获取
+//        Yaml yaml = new Yaml();
+//        JSONObject jsonObject = (JSONObject) JSONObject.toJSON(yaml.load(ProductApi.class.getResourceAsStream("/application.yml")));
+//        jsonObject =jsonObject.getJSONObject("spring").getJSONObject("datasource");
+//        if(null != jsonObject){
+//            Class.forName(jsonObject.getString("driver-class-name"));
+//            Properties props = new Properties();
+//            props.setProperty("user", jsonObject.getString("username"));
+//            props.setProperty("password", jsonObject.getString("password"));
+//            props.setProperty("remarks", "true"); // 设置可以获取remarks信息
+//            props.setProperty("useInformationSchema", "true");// 设置可以获取tables
+//            // remarks信息
+//            connection = DriverManager.getConnection(jsonObject.getString("url"), props);
+//        }else{
             Class.forName(DRIVER);
             Properties props = new Properties();
             props.setProperty("user", USER);
@@ -70,7 +71,7 @@ public class CodeGenerateService {
             props.setProperty("useInformationSchema", "true");// 设置可以获取tables
             // remarks信息
             connection = DriverManager.getConnection(URL, props);
-        }
+//        }
 
         return connection;
 
