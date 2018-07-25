@@ -145,12 +145,15 @@ $(function(){
         multiselect: true,
         //multikey: "ctrlKey",
         multiboxonly: true,
-        loadComplete : function() {
+        loadComplete : function(res) {
             var table = this;
             setTimeout(function(){
                 updatePagerIcons(table);
             }, 0);
             $("[data-toggle='tooltip']").tooltip({html : true});
+
+            //缓存当前页面数据
+            // $('#grid-table').data("gridTable",res);
         },
         editurl: "",//不需要
         caption: "${table_annotation}管理",
@@ -293,7 +296,8 @@ function beforeSelectRow(){
 
 //datepicker plugin
 $('.form_datatime').datetimepicker({
-    format:"yyyy-mm-dd hh:ii:ss",
+    format:"yyyy-mm-dd",
+    // format:"yyyy-mm-dd hh:ii:ss",//时分秒
     weekStart: 1,
     todayBtn:  "linked",
     clearBtn:1,
@@ -301,7 +305,8 @@ $('.form_datatime').datetimepicker({
     todayHighlight: 1,
     startView: 2,
     forceParse: 0,
-    minView:'hour',
+    minView:2,
+    // minView:'hour',//时分秒
     showMeridian: false,
     language:'zh-CN'
 });
@@ -324,7 +329,7 @@ function exportExcelData(){
     paramData.title = "${table_annotation}管理";
 
     // 需要翻译字段信息 格式{status:{on:"进行中",off:"未开启",expire:"已结束"}}
-    paramData.translateDicts = getAllDicts();
+    paramData.translateDicts = translateDicts();
 
     var data=JSON.stringify(paramData);
     var path = '/app/export?params='+data;
