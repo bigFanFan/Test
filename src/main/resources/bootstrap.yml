@@ -1,6 +1,6 @@
 #定义本jar端口
 server:
-  port: 5555
+  port: 4555
 #定义注册中心上本服务的名称，版本号用于多版本兼容时，网关版本路由
 spring:
   application:

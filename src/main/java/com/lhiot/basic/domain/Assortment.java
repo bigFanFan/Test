@@ -1,13 +1,9 @@
 package com.lhiot.basic.domain;
 
-import java.io.Serializable;
-import java.sql.Timestamp;
-import java.util.List;
+import com.lhiot.basic.common.PagerRequestObject;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -16,46 +12,80 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
-* 描述：商品套餐
+* Description:商品套餐实体类
 * @author yijun
-* @date 2018-07-21
+* @date 2018/07/24
 */
 @Data
-@ToString
+@ToString(callSuper = true)
 @ApiModel
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-public class Assortment implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public class Assortment extends PagerRequestObject{
 
-	@JsonSerialize(using = ToStringSerializer.class)
-    @ApiModelProperty(notes = "", dataType = "Long")
+    /**
+    *
+    */
+    @JsonProperty("id")
+    @ApiModelProperty(value = "", dataType = "Long")
     private Long id;
 
-    @ApiModelProperty(notes = "套餐名称", dataType = "String")
+    /**
+    *套餐名称
+    */
+    @JsonProperty("assortmentName")
+    @ApiModelProperty(value = "套餐名称", dataType = "String")
     private String assortmentName;
 
-    @ApiModelProperty(notes = "当前状态(有效- VALID 无效-INVALID)", dataType = "String")
+    /**
+    *当前状态(有效- VALID 无效-INVALID)
+    */
+    @JsonProperty("status")
+    @ApiModelProperty(value = "当前状态(有效- VALID 无效-INVALID)", dataType = "String")
     private String status;
 
+    /**
+    *创建时间
+    */
+    @JsonProperty("createTime")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
-    @ApiModelProperty(notes = "创建时间", dataType = "Timestamp")
-    private Timestamp createTime;
+    @ApiModelProperty(value = "创建时间", dataType = "Date")
+    private java.util.Date createTime;
+    
 
-    @ApiModelProperty(notes = "创建人", dataType = "String")
+    /**
+    *创建人
+    */
+    @JsonProperty("createUser")
+    @ApiModelProperty(value = "创建人", dataType = "String")
     private String createUser;
 
-    @ApiModelProperty(notes = "套餐图片", dataType = "String")
+    /**
+    *套餐图片
+    */
+    @JsonProperty("assortmentImage")
+    @ApiModelProperty(value = "套餐图片", dataType = "String")
     private String assortmentImage;
 
-    @ApiModelProperty(notes = "套餐详情", dataType = "String")
+    /**
+    *套餐详情
+    */
+    @JsonProperty("detail")
+    @ApiModelProperty(value = "套餐详情", dataType = "String")
     private String detail;
 
-    @ApiModelProperty(notes = "套餐简介", dataType = "String")
+    /**
+    *套餐简介
+    */
+    @JsonProperty("introduce")
+    @ApiModelProperty(value = "套餐简介", dataType = "String")
     private String introduce;
 
-    @ApiModelProperty(notes = "套餐价格", dataType = "Integer")
+    /**
+    *套餐价格
+    */
+    @JsonProperty("price")
+    @ApiModelProperty(value = "套餐价格", dataType = "Integer")
     private Integer price;
-    
-    @ApiModelProperty(notes = "套餐价格", dataType = "java.util.List")
-    private List<ProductStandardResult> assortmentProducts;
+
 }
