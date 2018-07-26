@@ -21,7 +21,7 @@ import lombok.ToString;
 @ApiModel
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class ProducassortmentRelation extends PagerRequestObject{
+public class ProductAssortmentRelation extends PagerRequestObject{
 
     /**
     *
