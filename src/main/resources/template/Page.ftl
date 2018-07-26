@@ -173,7 +173,9 @@ $(function(){
             type:'Get',
             data:{id:id},
             success:function(result){
-                if(result){
+                if(result.success){
+                    result = result.datas;
+
                     //回填数据
                     <#if model_column?exists>
                         <#list model_column as model>
@@ -183,7 +185,7 @@ $(function(){
                 }
                 else
                 {
-                    $.alert('提示','操作失败 ！');
+                    $.alert('提示',result.msg);
                 }
             }
         });
@@ -212,7 +214,9 @@ $(function(){
                 type:'Get',
                 data:{id:id},
                 success:function(result){
-                    if(result){
+                    if(result.success){
+                        result = result.datas;
+
                         //回填数据
                         <#if model_column?exists>
                             <#list model_column as model>
@@ -222,7 +226,7 @@ $(function(){
                     }
                     else
                     {
-                        $.alert('提示','操作失败 ！');
+                        $.alert('提示',result.msg);
                     }
                 }
             });
@@ -237,7 +241,7 @@ $(function(){
         }
 
         //Ajax提交表单数据
-        var data=JSON.stringify(getFromJsonData('#info_form'););
+        var data=JSON.stringify(getFromJsonData('#info_form'));
 
         if($('#info_form').valid()){
             $.ajax({

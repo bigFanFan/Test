@@ -2,6 +2,7 @@ package ${package_name}.controller.${table_name_first_low};
 
 import com.sgsl.app.config.ApplicationConfiguration;
 import com.sgsl.app.domain.PagerResultObject;
+import com.sgsl.app.util.BaseResult;
 import com.sgsl.app.util.RestTemplateHelper;
 import com.sgsl.foodsee.common.wrapper.ArrayObject;
 import io.swagger.annotations.ApiModel;
@@ -16,13 +17,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.springframework.web.client.Exception;
 
 @Slf4j
 @Controller
 @RequestMapping("/app/${table_name_first_low}")
 @ApiModel("${table_annotation}")
-public class ${table_name}Controller implements BaseObject {
+public class ${table_name}Controller {
 
     private String requestUrl = "%s/${table_name_small?replace("_","/")}";
 
@@ -47,28 +47,40 @@ public class ${table_name}Controller implements BaseObject {
     @ApiOperation(value = "后台管理--${table_annotation}分页列表", notes = "后台管理--${table_annotation}分页列表")
     @PostMapping("/grid")
     @ResponseBody
-    public PagerResultObject<${table_name}> grid(${table_name} ${table_name_first_low}) {
-
-        return  RestTemplateHelper.builder().url(requestUrl.concat("/page/query")).version(version).build()
-                        .exchange(HttpMethod.GET, new ParameterizedTypeReference<PagerResultObject<${table_name}>>() {
+    public PagerResultObject grid(${table_name} ${table_name_first_low}) {
+        PagerResultObject pagerResult = null;
+         try {
+                pagerResult =  RestTemplateHelper.builder().url(requestUrl.concat("/page/query")).version(version).build()
+                        .exchangeUrl(HttpMethod.GET, new ParameterizedTypeReference<PagerResultObject<${table_name}>>() {
                         }, ${table_name_first_low});
 
+        } catch (RestClientException e) {
+            log.error(e.getMessage());
+        }
+        return pagerResult;
     }
 
     @ApiOperation(value = "后台管理--${table_annotation}详情", notes = "后台管理--${table_annotation}详情")
     @GetMapping("/detail")
     @ResponseBody
-    public ${table_name} detail(@RequestParam String id) {
+    public BaseResult<${table_name}> detail(@RequestParam String id) {
+        ${table_name}  ${table_name_first_low} = null;
+        try {
+                ${table_name_first_low} = RestTemplateHelper.builder().url(requestUrl.concat("/{id}")).version(version).build()
+                    .exchangePath(HttpMethod.GET, ${table_name}.class, id);
 
-        return RestTemplateHelper.builder().url(requestUrl.concat("/{id}")).version(version).build()
-                .exchange(HttpMethod.GET, ${table_name}.class, id);
+        } catch (RestClientException e) {
+            log.error(e.getMessage());
+            return BaseResult.badRequest().msg("查询失败");
+        }
+
+        return BaseResult.ok(${table_name_first_low});
     }
 
     @ApiOperation(value = "后台管理--新增或者修改${table_annotation}", notes = "后台管理--新增或者修改${table_annotation}")
     @PostMapping("/modify")
     @ResponseBody
-    public Map<String, Object> modify(@RequestBody ${table_name} ${table_name_first_low}) {
-        Map<String, Object> result = new HashMap<>();
+    public BaseResult modify(@RequestBody ${table_name} ${table_name_first_low}) {
 
         Long id = ${table_name_first_low}.getId();
         try {
@@ -80,33 +92,27 @@ public class ${table_name}Controller implements BaseObject {
                         Object.class, ${table_name_first_low});
 
             }
-            result.put(SUCCESS, true);
-            result.put(MESSAGE, "操作成功");
+
         } catch (Exception e) {
-            result.put(SUCCESS, false);
-            result.put(MESSAGE, "操作失败");
             log.error(e.getMessage());
+            return BaseResult.badRequest();
         }
-        return result;
+        return BaseResult.ok();
     }
 
     @ApiOperation(value = "后台管理--批量删除${table_annotation}", notes = "后台管理--批量删除${table_annotation}")
     @GetMapping("/delete")
     @ResponseBody
-    public Map<String, Object> delete(@RequestParam(value = "ids") String ids) {
-        Map<String, Object> result = new HashMap<>();
+    public BaseResult delete(@RequestParam(value = "ids") String ids) {
         try {
             RestTemplateHelper.builder().url(requestUrl.concat("/{ids}")).version(version).build()
-                    .exchange(HttpMethod.DELETE, Integer.class, ids);
+                    .exchangePath(HttpMethod.DELETE, Integer.class, ids);
 
-            result.put(SUCCESS, true);
-            result.put(MESSAGE, "操作成功");
         } catch (Exception e) {
-            result.put(SUCCESS, false);
-            result.put(MESSAGE, "操作失败");
             log.error(e.getMessage());
+            return BaseResult.badRequest();
         }
-        return result;
+         return BaseResult.ok();
     }
 
 }

@@ -1,13 +1,10 @@
 package com.lxs.codegenerator;
 
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
-import com.lxs.code.api.ProductApi;
 import freemarker.template.Template;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
 import java.sql.Connection;
@@ -27,16 +24,18 @@ public class CodeGenerateService {
     private final String CURRENT_DATE_TIME = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
 
     private final String packageName = "com.foodsee.user";
-//    private final String packageName = "com.lhiot.wechat.activity";
+//    private final String packageName = "com.lxs.code";
 
-    private final String URL = "jdbc:mysql://172.16.10.196:3305/foodsee_user_201804?useSSL=false";
+    private final String URL = "jdbc:mysql://172.16.10.196:3306/foodsee_user_201804?useSSL=false";
     private final String USER = "root";
     private final String PASSWORD = "root";
     private final String DRIVER = "com.mysql.jdbc.Driver";
 
 
     //生成项目路径
-    private String diskPath = "D:\\lmj\\git-project-fork\\foodsee-server\\user-center\\";
+    private String diskPath = "D:\\lmj\\git-project-my\\code-generator\\"; //当前项目目录
+//    private String diskPath = "D:\\lmj\\git-project-fork\\foodsee-server\\user-center\\";
+
     // 生成文件是否放同一文件夹标识
     private boolean oneFloadFlag = false;
 
@@ -44,7 +43,7 @@ public class CodeGenerateService {
     private boolean pageFlag = true;
     private final String tableTirmPrefix = "t_";// 生成文件中去掉表前缀
     // 需要生成的table ,逗号分割
-    private final List<String> tableList = Lists.newArrayList("product");
+    private final List<String> tableList = Lists.newArrayList("t_delivery_order_operator");
 
     public Connection getConnection() throws Exception {
         Connection connection = null;
