@@ -1,9 +1,7 @@
 package com.lhiot.basic.domain;
 
-import com.lhiot.basic.common.PagerRequestObject;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.lhiot.basic.common.PagerRequestObject;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
