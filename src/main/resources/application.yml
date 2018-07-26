@@ -2,7 +2,7 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://172.16.10.196:3306/sgsl_base?useSSL=false
+    url: jdbc:mysql://172.16.10.196:3306/sgsl_user_fruit_doctor?useSSL=false
     username: root
     password: root
     hikari:

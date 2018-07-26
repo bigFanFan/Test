@@ -22,29 +22,28 @@ import java.util.*;
  */
 @Service
 public class CodeGenerateService {
-    private final String AUTHOR = "Limiaojun";
+    private final String AUTHOR = "yijun";
     private final String CURRENT_DATE = new SimpleDateFormat("yyyy/MM/dd").format(new Date());
     private final String CURRENT_DATE_TIME = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
 
-    private final String packageName = "com.lxs.code";
-//    private final String packageName = "com.lhiot.wechat.activity";
+    private final String packageName = "com.lhiot.fruitdoctor.user";
 
-    private final String URL = "jdbc:mysql://172.16.10.196:3305/sgsl_base?useSSL=false";
+    private final String URL = "jdbc:mysql://172.16.10.196:3305/sgsl_user_fruit_doctor?useSSL=false";
     private final String USER = "root";
     private final String PASSWORD = "root";
     private final String DRIVER = "com.mysql.jdbc.Driver";
 
 
     //生成项目路径
-    private String diskPath = "D:\\lmj\\git-project-my\\code-generator\\";
+    private String diskPath = "D:\\yj-code\\git-project-my-fruit_doctor\\code-generator\\";
     // 生成文件是否放同一文件夹标识
     private boolean oneFloadFlag = false;
 
     // 生成分页标识
     private boolean pageFlag = true;
-    private final String tableTirmPrefix = "t_";// 生成文件中去掉表前缀
+    private final String tableTirmPrefix = "";// 生成文件中去掉表前缀
     // 需要生成的table ,逗号分割
-    private final List<String> tableList = Lists.newArrayList("product");
+    private final List<String> tableList = Lists.newArrayList("card_update_log","doctor_bonus_log","doctor_user","fruit_doctor","fruit_doctor_user","register_application","settlement_application");
 
     public Connection getConnection() throws Exception {
         Connection connection = null;
