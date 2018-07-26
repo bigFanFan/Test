@@ -1,7 +1,7 @@
 package com.lhiot.basic.api;
 
-import com.lhiot.basic.domain.ProducassortmentRelation;
-import com.lhiot.basic.service.ProducassortmentRelationService;
+import com.lhiot.basic.domain.ProductAssortmentRelation;
+import com.lhiot.basic.service.ProductAssortmentRelationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -19,33 +19,33 @@ import com.lhiot.basic.common.PagerResultObject;
 @Api(description = "套餐商品关联接口")
 @Slf4j
 @RestController
-@RequestMapping("/producassortmentRelation")
-public class ProducassortmentRelationApi {
+@RequestMapping("/productAssortmentRelation")
+public class ProductAssortmentRelationApi {
 
-    private final ProducassortmentRelationService producassortmentRelationService;
+    private final ProductAssortmentRelationService productAssortmentRelationService;
 
     @Autowired
-    public ProducassortmentRelationApi(ProducassortmentRelationService producassortmentRelationService) {
-        this.producassortmentRelationService = producassortmentRelationService;
+    public ProductAssortmentRelationApi(ProductAssortmentRelationService productAssortmentRelationService) {
+        this.productAssortmentRelationService = productAssortmentRelationService;
     }
 
     @PostMapping("/create")
     @ApiOperation(value = "添加套餐商品关联")
-    @ApiImplicitParam(paramType = "body", name = "producassortmentRelation", value = "要添加的套餐商品关联", required = true, dataType = "ProducassortmentRelation")
-    public ResponseEntity<Integer> create(@RequestBody ProducassortmentRelation producassortmentRelation) {
-        log.debug("添加套餐商品关联\t param:{}",producassortmentRelation);
+    @ApiImplicitParam(paramType = "body", name = "productAssortmentRelation", value = "要添加的套餐商品关联", required = true, dataType = "ProductAssortmentRelation")
+    public ResponseEntity<Integer> create(@RequestBody ProductAssortmentRelation productAssortmentRelation) {
+        log.debug("添加套餐商品关联\t param:{}",productAssortmentRelation);
         
-        return ResponseEntity.ok(producassortmentRelationService.create(producassortmentRelation));
+        return ResponseEntity.ok(productAssortmentRelationService.create(productAssortmentRelation));
     }
 
     @PutMapping("/update/{id}")
     @ApiOperation(value = "根据id更新套餐商品关联")
-    @ApiImplicitParam(paramType = "body", name = "producassortmentRelation", value = "要更新的套餐商品关联", required = true, dataType = "ProducassortmentRelation")
-    public ResponseEntity<Integer> update(@PathVariable("id") Long id,@RequestBody ProducassortmentRelation producassortmentRelation) {
-        log.debug("根据id更新套餐商品关联\t id:{} param:{}",id,producassortmentRelation);
-        producassortmentRelation.setId(id);
+    @ApiImplicitParam(paramType = "body", name = "productAssortmentRelation", value = "要更新的套餐商品关联", required = true, dataType = "ProductAssortmentRelation")
+    public ResponseEntity<Integer> update(@PathVariable("id") Long id,@RequestBody ProductAssortmentRelation productAssortmentRelation) {
+        log.debug("根据id更新套餐商品关联\t id:{} param:{}",id,productAssortmentRelation);
+        productAssortmentRelation.setId(id);
         
-        return ResponseEntity.ok(producassortmentRelationService.updateById(producassortmentRelation));
+        return ResponseEntity.ok(productAssortmentRelationService.updateById(productAssortmentRelation));
     }
 
     @DeleteMapping("/{ids}")
@@ -54,23 +54,23 @@ public class ProducassortmentRelationApi {
     public ResponseEntity<Integer> deleteByIds(@PathVariable("ids") String ids) {
         log.debug("根据ids删除套餐商品关联\t param:{}",ids);
         
-        return ResponseEntity.ok(producassortmentRelationService.deleteByIds(ids));
+        return ResponseEntity.ok(productAssortmentRelationService.deleteByIds(ids));
     }
     
     @ApiOperation(value = "根据id查询套餐商品关联", notes = "根据id查询套餐商品关联")
     @ApiImplicitParam(paramType = "path", name = "id", value = "主键id", required = true, dataType = "Long")
     @GetMapping("/{id}")
-    public ResponseEntity<ProducassortmentRelation> findProducassortmentRelation(@PathVariable("id") Long id) {
+    public ResponseEntity<ProductAssortmentRelation> findProductAssortmentRelation(@PathVariable("id") Long id) {
 
-        return ResponseEntity.ok(producassortmentRelationService.selectById(id));
+        return ResponseEntity.ok(productAssortmentRelationService.selectById(id));
     }
     
     @GetMapping("/page/query")
     @ApiOperation(value = "查询套餐商品关联分页列表")
-    public ResponseEntity<PagerResultObject<ProducassortmentRelation>> pageQuery(ProducassortmentRelation producassortmentRelation){
-        log.debug("查询套餐商品关联分页列表\t param:{}",producassortmentRelation);
+    public ResponseEntity<PagerResultObject<ProductAssortmentRelation>> pageQuery(ProductAssortmentRelation productAssortmentRelation){
+        log.debug("查询套餐商品关联分页列表\t param:{}",productAssortmentRelation);
         
-        return ResponseEntity.ok(producassortmentRelationService.pageList(producassortmentRelation));
+        return ResponseEntity.ok(productAssortmentRelationService.pageList(productAssortmentRelation));
     }
     
 }
