@@ -3,6 +3,9 @@ package com.lhiot.basic.domain;
 import com.lhiot.basic.common.PagerRequestObject;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -88,4 +91,6 @@ public class Assortment extends PagerRequestObject{
     @ApiModelProperty(value = "套餐价格", dataType = "Integer")
     private Integer price;
 
+    @ApiModelProperty(value = "套餐商品", dataType = "java.util.List")
+    private List<ProductStandardResult> assortmentProducts;
 }

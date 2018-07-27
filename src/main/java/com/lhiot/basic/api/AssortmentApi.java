@@ -1,5 +1,7 @@
 package com.lhiot.basic.api;
 
+import javax.validation.constraints.NotNull;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -100,7 +102,13 @@ public class AssortmentApi {
         return ResponseEntity.ok(assortmentService.pageList(assortment));
     }
 
-
-
+    @SuppressWarnings("unchecked")
+	@GetMapping("/list/{ids}")
+    @ApiOperation(value = "根据ids查找套餐或者套餐及商品列表,供订单服务feign调用")
+    public ResponseEntity<ArrayObject<Assortment>> findAssortments(@PathVariable(required=true,value="ids") @NotNull String ids,
+    		@RequestParam(required=false,value="flag",defaultValue="no") String flag) {
+        log.debug("根据ids查找套餐或者套餐及商品列表", ids);
+        return ResponseEntity.ok(ArrayObject.of(assortmentService.findAssortments(ids, flag)));
+    }
 
 }
