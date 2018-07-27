@@ -1,10 +1,11 @@
 package com.lhiot.basic.mapper;
 
-import com.lhiot.basic.domain.Assortment;
-import org.apache.ibatis.annotations.Mapper;
-
 import java.util.List;
 import java.util.Map;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import com.lhiot.basic.domain.Assortment;
 
 /**
 * Description:商品套餐Mapper类
@@ -42,7 +43,7 @@ public interface AssortmentMapper {
     * @author yijun
     * @date 2018/07/24 09:55:48
     */
-    int deleteByIds(java.util.List<String> ids);
+    int deleteByIds(List<String> ids);
 
     /**
     * Description:根据id查找商品套餐
@@ -85,4 +86,8 @@ public interface AssortmentMapper {
     * @date 2018/07/24 09:55:48
     */
     long pageAssortmentCounts(Assortment assortment);
+    
+    //根据套餐id的集合查询套餐
+    List<Assortment> findByIds(List<Long> list);
+
 }

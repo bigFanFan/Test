@@ -204,5 +204,19 @@
             from assortment
             <include refid="Base_Where_Condition" />
     </select>
+    
+	<!-- 根据套餐id的集合查询套餐 -->
+	<select id="findByIds" parameterType="java.util.List"
+		resultType="com.lhiot.basic.domain.Assortment">
+       select * from assortment
+       <if test="_parameter != null">
+         <trim prefix="where">
+         	id in 
+         	<foreach collection="list" item="item" open="(" separator="," close=")">
+         		#{item}
+         	</foreach>
+         </trim>
+       </if>
+	</select>
 
 </mapper>
