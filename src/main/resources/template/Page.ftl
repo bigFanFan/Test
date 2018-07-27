@@ -101,7 +101,7 @@ $(function(){
         /*待翻译字典模板
         {name:'imageType',index:'imageType', editable: false,
              formatter: function(value,grid,rows,state){
-                 return translateDicts('imageType',value);
+                 return getDictByName('imageType',value);
              }
         },*/
         {name:'myac',index:'', fixed:true, sortable:false, resize:false,
