@@ -23,10 +23,10 @@ public class CodeGenerateService {
     private final String CURRENT_DATE = new SimpleDateFormat("yyyy/MM/dd").format(new Date());
     private final String CURRENT_DATE_TIME = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
 
-    private final String packageName = "com.foodsee.user";
-//    private final String packageName = "com.lxs.code";
+//    private final String packageName = "com.foodsee.user";
+    private final String packageName = "com.lxs.code1";
 
-    private final String URL = "jdbc:mysql://172.16.10.196:3306/foodsee_user_201804?useSSL=false";
+    private final String URL = "jdbc:mysql://172.16.10.196:3306/sgsl_base?useSSL=false";
     private final String USER = "root";
     private final String PASSWORD = "root";
     private final String DRIVER = "com.mysql.jdbc.Driver";
@@ -41,9 +41,9 @@ public class CodeGenerateService {
 
     // 生成分页标识
     private boolean pageFlag = true;
-    private final String tableTirmPrefix = "t_";// 生成文件中去掉表前缀
+    private final String tableTirmPrefix = "";// 生成文件中去掉表前缀
     // 需要生成的table ,逗号分割
-    private final List<String> tableList = Lists.newArrayList("t_delivery_order_operator");
+    private final List<String> tableList = Lists.newArrayList("store");
 
     public Connection getConnection() throws Exception {
         Connection connection = null;
