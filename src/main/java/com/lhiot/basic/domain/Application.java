@@ -24,13 +24,6 @@ import lombok.ToString;
 public class Application extends PagerRequestObject{
 
     /**
-    *
-    */
-    @JsonProperty("id")
-    @ApiModelProperty(value = "", dataType = "Long")
-    private Long id;
-
-    /**
     *应用类型描述
     */
     @JsonProperty("description")

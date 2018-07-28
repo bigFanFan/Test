@@ -46,12 +46,12 @@ public interface ApplicationMapper {
     /**
     * Description:根据id查找应用类型表(应用类型:APP-视食 WECHAT_MALL-微商城 S_MALL-小程序)
     *
-    * @param id
+    * @param applicationName
     * @return
     * @author yijun
     * @date 2018/07/24 09:55:48
     */
-    Application selectById(Long id);
+    Application selectById(String applicationName);
 
     /**
     * Description:查询应用类型表(应用类型:APP-视食 WECHAT_MALL-微商城 S_MALL-小程序)列表

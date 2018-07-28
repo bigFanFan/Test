@@ -66,8 +66,8 @@ public class Assortmensection extends PagerRequestObject{
     *应用类型
     */
     @JsonProperty("applicationType")
-    @ApiModelProperty(value = "应用类型", dataType = "Long")
-    private Long applicationType;
+    @ApiModelProperty(value = "应用类型", dataType = "String")
+    private String applicationType;
 
     /**
     *序号

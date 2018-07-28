@@ -78,12 +78,12 @@ public class AssortmensectionApi {
     @ApiOperation(value = "根据位置查询套餐版块", notes = "根据位置查询套餐版块")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "nameEn", value = "板块英语名", required = true, dataType = "String"),
-            @ApiImplicitParam(paramType = "query", name = "applicationType", value = "应用类型id", required = true, dataType = "Long")
+            @ApiImplicitParam(paramType = "query", name = "applicationType", value = "应用类型id", required = true, dataType = "String")
     }
     )
     @GetMapping("/section")
     public ResponseEntity findAssortmentSections(@RequestParam("nameEn") String nameEn,
-                                                 @RequestParam("applicationType") Long applicationType) {
+                                                 @RequestParam("applicationType") String applicationType) {
         return ResponseEntity.ok(assortmensectionService.findAssortmentSections(nameEn,applicationType));
     }
     
