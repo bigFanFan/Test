@@ -5,7 +5,6 @@
     <!-- 数据库字段对象关系映射 -->
     <resultMap id="BaseResultMap"
         type="com.lhiot.basic.domain.Application" >
-        <id column="id" property="id"/>
         <result column="description" property="description" />
         <result column="application_name" property="applicationName" />
     </resultMap>
@@ -13,19 +12,15 @@
     <!-- base查询字段  -->
     <sql id="Base_Column_List" >
         <trim suffixOverrides="," >
-            id,
             description,
             application_name,
         </trim>
     </sql>
 
     <!--新增应用类型表(应用类型:APP-视食 WECHAT_MALL-微商城 S_MALL-小程序)-->
-    <insert id="create" parameterType="com.lhiot.basic.domain.Application" useGeneratedKeys="true" keyProperty="id">
+    <insert id="create" parameterType="com.lhiot.basic.domain.Application">
         insert into application
         <trim prefix="(" suffix=")" suffixOverrides="," >
-            <if test="id != null ">
-                id,
-            </if>
             <if test="description != null ">
                 description,
             </if>
@@ -34,9 +29,6 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
-            <if test="id != null ">
-                #{id},
-            </if>
             <if test="description != null ">
                 #{description},
             </if>
@@ -50,17 +42,11 @@
     <update id="updateById" parameterType="com.lhiot.basic.domain.Application">
         update application
         <set>
-            <if test="id != null ">
-                id = #{id},
-            </if>
             <if test="description != null ">
                 description = #{description},
             </if>
-            <if test="applicationName != null ">
-                application_name = #{applicationName},
-            </if>
         </set>
-        where id=#{id}
+        where application_name=#{applicationName}
     </update>
 
     <!--根据ids删除应用类型表(应用类型:APP-视食 WECHAT_MALL-微商城 S_MALL-小程序)-->
@@ -75,17 +61,13 @@
 
     <!-- 根据id查找应用类型表(应用类型:APP-视食 WECHAT_MALL-微商城 S_MALL-小程序) -->
 	<select id="selectById" resultMap="BaseResultMap"
-		parameterType="long"> select <include refid="Base_Column_List" />
-		from application where id = #{id}
+		parameterType="String"> select <include refid="Base_Column_List" />
+		from application where application_name=#{applicationName}
 	</select>
-
 
     <!-- base where条件  -->
     <sql id="Base_Where_Condition" >
         <where>
-            <if test="id != null ">
-                and id = #{id}
-            </if>
             <if test="description != null ">
                 and description = #{description}
             </if>

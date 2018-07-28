@@ -57,20 +57,20 @@ public class ApplicationService {
     * @author yijun
     * @date 2018/07/24 09:55:48
     */ 
-    public int deleteByIds(String ids){
+/*    public int deleteByIds(String ids){
         return this.applicationMapper.deleteByIds(Arrays.asList(ids.split(",")));
-    }
+    }*/
     
     /** 
     * Description:根据id查找应用类型表(应用类型:APP-视食 WECHAT_MALL-微商城 S_MALL-小程序)
     *  
-    * @param id
+    * @param applicationName
     * @return
     * @author yijun
     * @date 2018/07/24 09:55:48
     */ 
-    public Application selectById(Long id){
-        return this.applicationMapper.selectById(id);
+    public Application selectById(String applicationName){
+        return this.applicationMapper.selectById(applicationName);
     }
 
     /** 

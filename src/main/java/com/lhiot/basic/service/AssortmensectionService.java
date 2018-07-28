@@ -116,7 +116,7 @@ public class AssortmensectionService {
      * @author yijun
      * @date 2018/07/24 09:55:48
      */
-    public Assortmensection findAssortmentSections(String nameEn,Long applicationType){
+    public Assortmensection findAssortmentSections(String nameEn,String applicationType){
         Assortmensection assortmensection=this.assortmensectionMapper.findAssortmentSections(ImmutableMap.of("nameEn",nameEn,"applicationType",applicationType));
         if(assortmensection!=null) {
             //查询套餐商品

@@ -47,31 +47,31 @@ public class ApplicationApi {
         return ResponseEntity.ok(applicationService.create(application));
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/update/{applicationName}")
     @ApiOperation(value = "根据id更新应用类型表(应用类型:APP-视食 WECHAT_MALL-微商城 S_MALL-小程序)")
     @ApiImplicitParam(paramType = "body", name = "application", value = "要更新的应用类型表(应用类型:APP-视食 WECHAT_MALL-微商城 S_MALL-小程序)", required = true, dataType = "Application")
-    public ResponseEntity<Integer> update(@PathVariable("id") Long id,@RequestBody Application application) {
-        log.debug("根据id更新应用类型表(应用类型:APP-视食 WECHAT_MALL-微商城 S_MALL-小程序)\t id:{} param:{}",id,application);
-        application.setId(id);
+    public ResponseEntity<Integer> update(@PathVariable("applicationName") String applicationName,@RequestBody Application application) {
+        log.debug("根据id更新应用类型表(应用类型:APP-视食 WECHAT_MALL-微商城 S_MALL-小程序)\t id:{} param:{}",applicationName,application);
+        application.setApplicationName(applicationName);
         
         return ResponseEntity.ok(applicationService.updateById(application));
     }
 
-    @DeleteMapping("/{ids}")
+    /*@DeleteMapping("/{ids}")
     @ApiOperation(value = "根据ids删除应用类型表(应用类型:APP-视食 WECHAT_MALL-微商城 S_MALL-小程序)")
     @ApiImplicitParam(paramType = "path", name = "ids", value = "要删除应用类型表(应用类型:APP-视食 WECHAT_MALL-微商城 S_MALL-小程序)的ids,逗号分割", required = true, dataType = "String")
     public ResponseEntity<Integer> deleteByIds(@PathVariable("ids") String ids) {
         log.debug("根据ids删除应用类型表(应用类型:APP-视食 WECHAT_MALL-微商城 S_MALL-小程序)\t param:{}",ids);
         
         return ResponseEntity.ok(applicationService.deleteByIds(ids));
-    }
+    }*/
     
     @ApiOperation(value = "根据id查询应用类型表(应用类型:APP-视食 WECHAT_MALL-微商城 S_MALL-小程序)", notes = "根据id查询应用类型表(应用类型:APP-视食 WECHAT_MALL-微商城 S_MALL-小程序)")
-    @ApiImplicitParam(paramType = "path", name = "id", value = "主键id", required = true, dataType = "Long")
-    @GetMapping("/{id}")
-    public ResponseEntity<Application> findApplication(@PathVariable("id") Long id) {
+    @ApiImplicitParam(paramType = "path", name = "applicationName", value = "应用类型名称", required = true, dataType = "String")
+    @GetMapping("/{applicationName}")
+    public ResponseEntity<Application> findApplication(@PathVariable("applicationName") String applicationName) {
 
-        return ResponseEntity.ok(applicationService.selectById(id));
+        return ResponseEntity.ok(applicationService.selectById(applicationName));
     }
     
     @GetMapping("/page/query")
