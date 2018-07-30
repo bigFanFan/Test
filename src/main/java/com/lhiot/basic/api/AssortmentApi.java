@@ -33,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 @Api(description = "商品套餐接口")
 @Slf4j
 @RestController
-@RequestMapping("/assortments")
+@RequestMapping("/assortment")
 public class AssortmentApi {
 
     private final AssortmentService assortmentService;
