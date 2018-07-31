@@ -38,8 +38,13 @@ public class PagerResultObject<T> {
     @ApiModelProperty(notes = "总分页数")
     private Long allPages;
 
-    @ApiModelProperty(notes = "数据")
+    @ApiModelProperty(notes = "后台数据")
     private List<T> rows = Collections.emptyList();
+
+    @ApiModelProperty(notes = "前端数据")
+    private List<T> array = Collections.emptyList();
+
+
 
     /**
      * Description:构建分页对象
@@ -77,7 +82,7 @@ public class PagerResultObject<T> {
             pagerResultObject.setAllPages(total % records == 0 ? total / records : total / records + 1);
         }
         pagerResultObject.setRows(rows);
-
+        pagerResultObject.setArray(rows);
         return pagerResultObject;
     }
 

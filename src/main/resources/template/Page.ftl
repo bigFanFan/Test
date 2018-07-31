@@ -145,12 +145,15 @@ $(function(){
         multiselect: true,
         //multikey: "ctrlKey",
         multiboxonly: true,
-        loadComplete : function() {
+        loadComplete : function(res) {
             var table = this;
             setTimeout(function(){
                 updatePagerIcons(table);
             }, 0);
             $("[data-toggle='tooltip']").tooltip({html : true});
+
+            //缓存当前页面数据
+            // $('#grid-table').data("gridTable",res);
         },
         editurl: "",//不需要
         caption: "${table_annotation}管理",
@@ -170,7 +173,9 @@ $(function(){
             type:'Get',
             data:{id:id},
             success:function(result){
-                if(result){
+                if(result.success){
+                    result = result.datas;
+
                     //回填数据
                     <#if model_column?exists>
                         <#list model_column as model>
@@ -180,7 +185,7 @@ $(function(){
                 }
                 else
                 {
-                    $.alert('提示','操作失败 ！');
+                    $.alert('提示',result.msg);
                 }
             }
         });
@@ -209,7 +214,9 @@ $(function(){
                 type:'Get',
                 data:{id:id},
                 success:function(result){
-                    if(result){
+                    if(result.success){
+                        result = result.datas;
+
                         //回填数据
                         <#if model_column?exists>
                             <#list model_column as model>
@@ -219,7 +226,7 @@ $(function(){
                     }
                     else
                     {
-                        $.alert('提示','操作失败 ！');
+                        $.alert('提示',result.msg);
                     }
                 }
             });
@@ -234,7 +241,7 @@ $(function(){
         }
 
         //Ajax提交表单数据
-        var data=JSON.stringify(getFromJsonData('#info_form'););
+        var data=JSON.stringify(getFromJsonData('#info_form'));
 
         if($('#info_form').valid()){
             $.ajax({
@@ -293,7 +300,8 @@ function beforeSelectRow(){
 
 //datepicker plugin
 $('.form_datatime').datetimepicker({
-    format:"yyyy-mm-dd hh:ii:ss",
+    format:"yyyy-mm-dd",
+    // format:"yyyy-mm-dd hh:ii:ss",//时分秒
     weekStart: 1,
     todayBtn:  "linked",
     clearBtn:1,
@@ -301,7 +309,8 @@ $('.form_datatime').datetimepicker({
     todayHighlight: 1,
     startView: 2,
     forceParse: 0,
-    minView:'hour',
+    minView:2,
+    // minView:'hour',//时分秒
     showMeridian: false,
     language:'zh-CN'
 });
@@ -334,32 +343,37 @@ function exportExcelData(){
     });
 }
 
+var translateDicts = {};
 /**
- * 翻译字典    fieldName不传值或者为空或者value不传值或空返回所有字典数据对象
+ * 获取所有要翻译字典信息
+ */
+function getAllDicts() {
+    //只初始化一次
+    if(JSON.stringify(translateDicts)=="{}"){
+        console.log("加载字典:::"+JSON.stringify(translateDicts));
+
+        translateDicts.STATUS = {
+            "0": "成功",
+            "1": "失败"
+        };
+    }
+}
+/**
+ * 翻译字典
  * fieldName 需要翻译的字段名称，value 需要翻译的字段值
  */
-function translateDicts(fieldName,value) {
-
-    //定义页面字典数据  start
-    var translateDicts = {};
-    translateDicts.imageStatus = {
-        "ON": "开启",
-        "OFF": "关闭"
-    };
-    //定义页面字典数据  end
-
-    if (fieldName == undefined || fieldName == ''
-            || value == undefined || value == '') {
-        return translateDicts;
-    }
+function getDictByName(fieldName,value) {
+    getAllDicts();
 
 
     var translateDictName = '';//需要翻译字典名称
+
     //判断字段名称存在字典对象  并且值也存在,则获取翻译名称
     if(translateDicts.hasOwnProperty(fieldName)
             && translateDicts[fieldName].hasOwnProperty(value)){
         translateDictName = translateDicts[fieldName][value];
     }
-    return (translateDictName == undefined || translateDictName == '') ? "N/A" : translateDictName;
+
+    return translateDictName == '' ? "N/A" : translateDictName;
 }
 </script>
