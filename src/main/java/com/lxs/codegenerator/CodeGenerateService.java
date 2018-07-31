@@ -42,7 +42,7 @@ public class CodeGenerateService {
     private boolean pageFlag = true;
     private final String tableTirmPrefix = "";// 生成文件中去掉表前缀
     // 需要生成的table ,逗号分割
-    private final List<String> tableList = Lists.newArrayList();
+    private final List<String> tableList = Lists.newArrayList("store");
 
     public Connection getConnection() throws Exception {
         Connection connection = null;

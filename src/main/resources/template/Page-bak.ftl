@@ -3,7 +3,7 @@
         <div class="pull-left">
             <#if model_column?exists>
                 <#list model_column as model>
-            <input type="text" class="form-control" name="${model.changeColumnName?uncap_first}" id="${model.changeColumnName?uncap_first}Query" placeholder="${model.columnComment!}" />
+            <input type="text" class="form-control" name="${model.changeColumnName?uncap_first}" id="${model.changeColumnName?uncap_first}" placeholder="${model.columnComment!}" />
                 </#list>
             </#if>
 
@@ -37,9 +37,37 @@
     <!-- PAGE CONTENT ENDS -->
 </div><!-- /.col -->
 
+<div class="modal fade" id="detail-dialog" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">${table_annotation}详情</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <input type="hidden" name="id" id="id" />
+                    <#if model_column?exists>
+                        <#list model_column as model>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <label class="col-md-5">${model.columnComment!}：</label>
+                            <div class="${model.changeColumnName?uncap_first} col-md-7 nopd-lr"></div>
+                        </div>
+                    </div>
+                        </#list>
+                    </#if>
+                </div>
+            </div>
+            <div class="modal-footer text-center">
+                <button id="btn-close" class="btn btn-info" type="button" data-dismiss="modal" aria-hidden="true">
+                                        关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
-
-<!--添加、修改-->
 <div class="modal fade" id="info-dialog" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -98,16 +126,10 @@ $(function(){
         {name:'${model.changeColumnName?uncap_first}',index:'${model.changeColumnName?uncap_first}', editable: false},
                 </#list>
             </#if>
-        /*待翻译字典模板
-        {name:'imageType',index:'imageType', editable: false,
-             formatter: function(value,grid,rows,state){
-                 return getDictByName('imageType',value);
-             }
-        },*/
         {name:'myac',index:'', fixed:true, sortable:false, resize:false,
              formatter: function(value,grid,rows,state){
-                 return '<a class="btn btn-info btn-xs mr5" data-toggle="modal" data-target="#info-dialog" data-id="'+rows.id+'" title="查看详情"  onclick="detailDialog()"><i class="fa fa-eye"></i></a>'+
-                         '<a class="btn btn-warning btn-xs mr5" data-toggle="modal" data-target="#info-dialog" title="修改" data-id="'+rows.id+'"  onclick="updateDialog()"><i class="fa fa-edit"></i></a>'+
+                 return '<a class="btn btn-info btn-xs mr5" data-toggle="modal" data-target="#detail-dialog" data-id="'+rows.id+'" title="查看详情"><i class="fa fa-eye"></i></a>'+
+                         '<a class="btn btn-warning btn-xs mr5" data-toggle="modal" data-target="#info-dialog" title="修改" data-id="'+rows.id+'"><i class="fa fa-edit"></i></a>'+
                          '<a class="btn btn-danger btn-xs mr5" data-toggle="tooltip" data-placement="top" title="删除" onclick=confrimDel2("#grid-table","/app/${table_name_first_low}s/delete")><i class="fa fa-trash"></i></a>';
              }
          }
@@ -137,7 +159,38 @@ $(function(){
         caption: "${table_annotation}管理",
         autowidth: true
     });
+
     initNavGrid(grid_selector,pager_selector);
+
+    //查看详情
+    $('#detail-dialog').on('show.bs.modal',function(e){
+        var $button=$(e.relatedTarget);
+        var id=$button.data("id");
+        var modal = $(this);
+        //发送ajax回去查询单条数据
+        $.ajax({
+            url:'/app/${table_name_first_low}s/detail',
+            type:'Get',
+            data:{id:id},
+            success:function(result){
+                if(result.success){
+                    result = result.datas;
+
+                    //回填数据
+                    <#if model_column?exists>
+                        <#list model_column as model>
+                    modal.find('.${model.changeColumnName?uncap_first}').text(result.${model.changeColumnName?uncap_first});
+                        </#list>
+                    </#if>
+                }
+                else
+                {
+                    $.alert('提示',result.msg);
+                }
+            }
+        });
+
+    });
 
     //添加或编辑
     $('#info-dialog').on('show.bs.modal',function(e){
@@ -151,6 +204,7 @@ $(function(){
             $('#info_form').find('input[type="hidden"]').each(function(i,item){
                 $(item).val("");
             });
+            $('#info_form').find(".description").val("");
 
             return;
         }else{
@@ -261,43 +315,6 @@ $('.form_datatime').datetimepicker({
     language:'zh-CN'
 });
 
-//查看详情
-function detailDialog(){
-    let $modal = $('#info-dialog');
-    let title = $modal.find('h4').text();
-    $modal.find('h4').text(title.replace('添加','').replace('修改','')  + '详情');
-    $modal.find('.webuploader-pick').hide();
-    $modal.find('input').attr('disabled','disabled');
-    $modal.find('select').attr('disabled','disabled');
-    $modal.find('input').removeClass('error');
-    $modal.find('select').removeClass('error');
-    $modal.find('.text-muted').hide();
-    $modal.find('.btn').hide();
-    $('#info-dialog').find('.modal-footer').append('<button id="btn-close" class="btn btn-info" type="button" data-dismiss="modal" aria-hidden="true">关闭</button>')
-};
-//窗口隐藏复位信息
-$('#info-dialog').on('hidden.bs.modal',function(e){
-    let $modal = $('#info-dialog');
-    $modal.find('.webuploader-pick').show();
-    $modal.find('input').removeAttr("disabled");
-    $modal.find('select').removeAttr("disabled");
-    $modal.find('.text-muted').show();
-    $modal.find('.btn').show();
-    $modal.find('.modal-footer').find('#btn-close').remove();
-
-    let title = $modal.find('h4').text();
-    if(title.indexOf('添加') == -1)
-        $modal.find('h4').text('添加' + title.replace('修改','').replace('详情','') );
-    else
-        $modal.find('h4').text(title.replace('修改','').replace('详情','') );
-
-});
-//修改详情
-function updateDialog(){
-    $('#info-dialog').find('h4').text($('#info-dialog').find('h4').text().replace('添加','修改'));
-};
-
-//导出
 function exportExcelData(){
     //Ajax提交表单数据
     var paramData={};
@@ -316,7 +333,7 @@ function exportExcelData(){
     paramData.title = "${table_annotation}管理";
 
     // 需要翻译字段信息 格式{status:{on:"进行中",off:"未开启",expire:"已结束"}}
-    paramData.translateDicts = translateDicts;
+    paramData.translateDicts = translateDicts();
 
     var data=JSON.stringify(paramData);
     var path = '/app/export?params='+data;
@@ -326,8 +343,6 @@ function exportExcelData(){
     });
 }
 
-
-//待翻译字典对象信息
 var translateDicts = {};
 /**
  * 获取所有要翻译字典信息
@@ -337,10 +352,10 @@ function getAllDicts() {
     if(JSON.stringify(translateDicts)=="{}"){
         console.log("加载字典:::"+JSON.stringify(translateDicts));
 
-        // translateDicts.STATUS = {
-        //     "0": "成功",
-        //     "1": "失败"
-        // };
+        translateDicts.STATUS = {
+            "0": "成功",
+            "1": "失败"
+        };
     }
 }
 /**
