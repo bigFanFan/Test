@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.lhiot.basic.mapper.AssortmensectionRelationMapper">
+<mapper namespace="com.lhiot.basic.mapper.AssortmentSectionRelationMapper">
 
     <!-- 数据库字段对象关系映射 -->
     <resultMap id="BaseResultMap"
-        type="com.lhiot.basic.domain.AssortmensectionRelation" >
+        type="com.lhiot.basic.domain.AssortmentSectionRelation" >
         <id column="id" property="id"/>
         <result column="section_id" property="sectionId" />
         <result column="assortment_id" property="assortmentId" />
@@ -51,7 +51,7 @@
     </sql>
 
     <!--新增板块套餐关联-->
-    <insert id="create" parameterType="com.lhiot.basic.domain.AssortmensectionRelation" useGeneratedKeys="true" keyProperty="id">
+    <insert id="create" parameterType="com.lhiot.basic.domain.AssortmentSectionRelation" useGeneratedKeys="true" keyProperty="id">
         insert into assortment_section_relation
         <trim prefix="(" suffix=")" suffixOverrides="," >
             <if test="id != null ">
@@ -84,7 +84,7 @@
     </insert>
 
     <!--根据id修改板块套餐关联-->
-    <update id="updateById" parameterType="com.lhiot.basic.domain.AssortmensectionRelation">
+    <update id="updateById" parameterType="com.lhiot.basic.domain.AssortmentSectionRelation">
         update assortment_section_relation
         <set>
             <if test="id != null ">
@@ -140,8 +140,8 @@
 
 
     <!--查询板块套餐关联列表-->
-     <select id="pageAssortmensectionRelations" resultMap="BaseResultMap"
-        parameterType="com.lhiot.basic.domain.AssortmensectionRelation">
+     <select id="pageAssortmentSectionRelations" resultMap="BaseResultMap"
+        parameterType="com.lhiot.basic.domain.AssortmentSectionRelation">
 	        select <include refid="Base_Column_List" />
 	        from assortment_section_relation
 	        <include refid="Base_Where_Condition" />
@@ -149,8 +149,8 @@
     </select>
 
     <!--查询板块套餐关联总记录-->
-    <select id="pageAssortmensectionRelationCounts" resultType="long"
-        parameterType="com.lhiot.basic.domain.AssortmensectionRelation">
+    <select id="pageAssortmentSectionRelationCounts" resultType="long"
+        parameterType="com.lhiot.basic.domain.AssortmentSectionRelation">
             select count(1)
             from assortment_section_relation
             <include refid="Base_Where_Condition" />
