@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lhiot.basic.common.PagerResultObject;
-import com.lhiot.basic.domain.Assortmensection;
-import com.lhiot.basic.service.AssortmensectionService;
+import com.lhiot.basic.domain.AssortmentSection;
+import com.lhiot.basic.service.AssortmentSectionService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -30,33 +30,33 @@ import lombok.extern.slf4j.Slf4j;
 @Api(description = "套餐板块分类接口")
 @Slf4j
 @RestController
-@RequestMapping("/assortmensection")
-public class AssortmensectionApi {
+@RequestMapping("/assortmentSection")
+public class AssortmentSectionApi {
 
-    private final AssortmensectionService assortmensectionService;
+    private final AssortmentSectionService assortmentSectionService;
 
     @Autowired
-    public AssortmensectionApi(AssortmensectionService assortmensectionService) {
-        this.assortmensectionService = assortmensectionService;
+    public AssortmentSectionApi(AssortmentSectionService assortmentSectionService) {
+        this.assortmentSectionService = assortmentSectionService;
     }
 
     @PostMapping("/create")
     @ApiOperation(value = "添加套餐板块分类")
-    @ApiImplicitParam(paramType = "body", name = "assortmensection", value = "要添加的套餐板块分类", required = true, dataType = "Assortmensection")
-    public ResponseEntity<Integer> create(@RequestBody Assortmensection assortmensection) {
-        log.debug("添加套餐板块分类\t param:{}",assortmensection);
+    @ApiImplicitParam(paramType = "body", name = "assortmentSection", value = "要添加的套餐板块分类", required = true, dataType = "AssortmentSection")
+    public ResponseEntity<Integer> create(@RequestBody AssortmentSection assortmentSection) {
+        log.debug("添加套餐板块分类\t param:{}",assortmentSection);
         
-        return ResponseEntity.ok(assortmensectionService.create(assortmensection));
+        return ResponseEntity.ok(assortmentSectionService.create(assortmentSection));
     }
 
     @PutMapping("/update/{id}")
     @ApiOperation(value = "根据id更新套餐板块分类")
-    @ApiImplicitParam(paramType = "body", name = "assortmensection", value = "要更新的套餐板块分类", required = true, dataType = "Assortmensection")
-    public ResponseEntity<Integer> update(@PathVariable("id") Long id,@RequestBody Assortmensection assortmensection) {
-        log.debug("根据id更新套餐板块分类\t id:{} param:{}",id,assortmensection);
-        assortmensection.setId(id);
+    @ApiImplicitParam(paramType = "body", name = "assortmentSection", value = "要更新的套餐板块分类", required = true, dataType = "AssortmentSection")
+    public ResponseEntity<Integer> update(@PathVariable("id") Long id,@RequestBody AssortmentSection assortmentSection) {
+        log.debug("根据id更新套餐板块分类\t id:{} param:{}",id,assortmentSection);
+        assortmentSection.setId(id);
         
-        return ResponseEntity.ok(assortmensectionService.updateById(assortmensection));
+        return ResponseEntity.ok(assortmentSectionService.updateById(assortmentSection));
     }
 
     @DeleteMapping("/{ids}")
@@ -65,23 +65,23 @@ public class AssortmensectionApi {
     public ResponseEntity<Integer> deleteByIds(@PathVariable("ids") String ids) {
         log.debug("根据ids删除套餐板块分类\t param:{}",ids);
         
-        return ResponseEntity.ok(assortmensectionService.deleteByIds(ids));
+        return ResponseEntity.ok(assortmentSectionService.deleteByIds(ids));
     }
     
     @ApiOperation(value = "根据id查询套餐板块分类", notes = "根据id查询套餐板块分类")
     @ApiImplicitParam(paramType = "path", name = "id", value = "主键id", required = true, dataType = "Long")
     @GetMapping("/{id}")
-    public ResponseEntity<Assortmensection> findAssortmensection(@PathVariable("id") Long id) {
+    public ResponseEntity<AssortmentSection> findAssortmentSection(@PathVariable("id") Long id) {
 
-        return ResponseEntity.ok(assortmensectionService.selectById(id));
+        return ResponseEntity.ok(assortmentSectionService.selectById(id));
     }
     
     @GetMapping("/page/query")
     @ApiOperation(value = "查询套餐板块分类分页列表")
-    public ResponseEntity<PagerResultObject<Assortmensection>> pageQuery(Assortmensection assortmensection){
-        log.debug("查询套餐板块分类分页列表\t param:{}",assortmensection);
+    public ResponseEntity<PagerResultObject<AssortmentSection>> pageQuery(AssortmentSection assortmentSection){
+        log.debug("查询套餐板块分类分页列表\t param:{}",assortmentSection);
         
-        return ResponseEntity.ok(assortmensectionService.pageList(assortmensection));
+        return ResponseEntity.ok(assortmentSectionService.pageList(assortmentSection));
     }
 
     @ApiOperation(value = "根据位置查询套餐版块", notes = "根据位置查询套餐版块")
@@ -93,7 +93,7 @@ public class AssortmensectionApi {
     @GetMapping("/section")
     public ResponseEntity findAssortmentSections(@RequestParam("nameEn") String nameEn,
                                                  @RequestParam("applicationType") String applicationType) {
-        return ResponseEntity.ok(assortmensectionService.findAssortmentSections(nameEn,applicationType));
+        return ResponseEntity.ok(assortmentSectionService.findAssortmentSections(nameEn,applicationType));
     }
     
 }

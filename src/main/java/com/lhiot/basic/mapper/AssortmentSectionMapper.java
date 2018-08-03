@@ -1,6 +1,6 @@
 package com.lhiot.basic.mapper;
 
-import com.lhiot.basic.domain.Assortmensection;
+import com.lhiot.basic.domain.AssortmentSection;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -12,27 +12,27 @@ import java.util.Map;
 * @date 2018/07/24
 */
 @Mapper
-public interface AssortmensectionMapper {
+public interface AssortmentSectionMapper {
 
     /**
     * Description:新增套餐板块分类
     *
-    * @param assortmensection
+    * @param assortmentSection
     * @return
     * @author yijun
     * @date 2018/07/24 09:55:48
     */
-    int create(Assortmensection assortmensection);
+    int create(AssortmentSection assortmentSection);
 
     /**
     * Description:根据id修改套餐板块分类
     *
-    * @param assortmensection
+    * @param assortmentSection
     * @return
     * @author yijun
     * @date 2018/07/24 09:55:48
     */
-    int updateById(Assortmensection assortmensection);
+    int updateById(AssortmentSection assortmentSection);
 
     /**
     * Description:根据ids删除套餐板块分类
@@ -52,28 +52,28 @@ public interface AssortmensectionMapper {
     * @author yijun
     * @date 2018/07/24 09:55:48
     */
-    Assortmensection selectById(Long id);
+    AssortmentSection selectById(Long id);
 
     /**
     * Description:查询套餐板块分类列表
     *
-    * @param assortmensection
+    * @param assortmentSection
     * @return
     * @author yijun
     * @date 2018/07/24 09:55:48
     */
-     List<Assortmensection> pageAssortmensections(Assortmensection assortmensection);
+     List<AssortmentSection> pageAssortmentSections(AssortmentSection assortmentSection);
 
 
     /**
     * Description: 查询套餐板块分类总记录数
     *
-    * @param assortmensection
+    * @param assortmentSection
     * @return
     * @author yijun
     * @date 2018/07/24 09:55:48
     */
-    long pageAssortmensectionCounts(Assortmensection assortmensection);
+    long pageAssortmentSectionCounts(AssortmentSection assortmentSection);
 
 
     /**
@@ -81,5 +81,5 @@ public interface AssortmensectionMapper {
      * @param pram
      * @return
      */
-    Assortmensection findAssortmentSections(Map pram);
+    AssortmentSection findAssortmentSections(Map pram);
 }

@@ -23,7 +23,7 @@ import java.util.List;
 @ApiModel
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class Assortmensection extends PagerRequestObject{
+public class AssortmentSection extends PagerRequestObject{
 
     /**
     *
